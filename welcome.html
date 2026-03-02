@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Charles Jr Uzoma</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 100%; height: 100%;
+    overflow: hidden;
+    background: #01010a;
+    font-family: 'Syne', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    cursor: none;
+  }
+
+  /* ──────────── CUSTOM CURSOR ──────────── */
+  #cur {
+    position: fixed; pointer-events: none; z-index: 9999;
+    width: 11px; height: 11px;
+    background: #4f6fff;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    mix-blend-mode: screen;
+    box-shadow: 0 0 14px 3px rgba(79,111,255,.8);
+    transition: width .3s, height .3s, background .3s, box-shadow .3s;
+  }
+  #cur-ring {
+    position: fixed; pointer-events: none; z-index: 9998;
+    width: 44px; height: 44px;
+    border: 1.5px solid rgba(79,111,255,.5);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width .4s cubic-bezier(.16,1,.3,1),
+                height .4s cubic-bezier(.16,1,.3,1),
+                border-color .3s;
+  }
+  body.h-btn #cur { width: 18px; height: 18px; background: #a78bfa; box-shadow: 0 0 24px 5px rgba(167,139,250,.7); }
+  body.h-btn #cur-ring { width: 68px; height: 68px; border-color: rgba(167,139,250,.45); }
+
+  /* ──────────── CANVAS ──────────── */
+  #c {
+    position: fixed; inset: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    display: block;
+  }
+
+  /* ──────────── RADIAL VIGNETTE ──────────── */
+  .vig {
+    position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    background:
+      radial-gradient(ellipse 70% 70% at 50% 50%,
+        transparent 0%,
+        transparent 38%,
+        rgba(1,1,10,.5) 68%,
+        rgba(1,1,10,.92) 100%);
+  }
+
+  /* ──────────── FILM GRAIN ──────────── */
+  .grain {
+    position: fixed; inset: 0; z-index: 2; pointer-events: none;
+    opacity: .38;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23g)' opacity='.07'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+    animation: grainShift 0.12s steps(1) infinite;
+  }
+  @keyframes grainShift {
+    0%  { background-position: 0 0; }
+    20% { background-position: -50px -40px; }
+    40% { background-position: 30px -60px; }
+    60% { background-position: -20px 50px; }
+    80% { background-position: 60px 20px; }
+  }
+
+  /* ──────────── STAGE / UI ──────────── */
+  .stage {
+    position: fixed; inset: 0; z-index: 10;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    user-select: none;
+  }
+
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(.48rem, 1.1vw, .62rem);
+    font-weight: 300;
+    letter-spacing: .34em;
+    text-transform: uppercase;
+    color: #4f6fff;
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 28px;
+    opacity: 0; transform: translateY(10px);
+    animation: up .9s cubic-bezier(.16,1,.3,1) 1.3s forwards;
+  }
+  .eyebrow::before, .eyebrow::after {
+    content: ''; display: block;
+    width: 24px; height: 1px;
+    background: #4f6fff;
+    box-shadow: 0 0 8px #4f6fff;
+  }
+
+  .name-wrap {
+    opacity: 0; transform: translateY(18px);
+    animation: up 1.1s cubic-bezier(.16,1,.3,1) 1.65s forwards;
+  }
+  .name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2.8rem, 7.5vw, 8.2rem);
+    line-height: .9;
+    letter-spacing: -.035em;
+    display: block;
+  }
+  .name-l1 { color: #e8eaf6; }
+  .name-l2 {
+    background: linear-gradient(128deg, #5f7fff 0%, #7c5cfc 60%, #a78bfa 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(.48rem, 1.1vw, .65rem);
+    font-weight: 300;
+    letter-spacing: .28em;
+    text-transform: uppercase;
+    color: rgba(232,234,246,.38);
+    margin-top: 22px;
+    opacity: 0; transform: translateY(10px);
+    animation: up .9s cubic-bezier(.16,1,.3,1) 2.1s forwards;
+  }
+
+  .divider {
+    width: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(79,111,255,.5), rgba(124,92,252,.5), transparent);
+    box-shadow: 0 0 10px rgba(79,111,255,.3);
+    margin: 40px 0 36px;
+    animation: grow 1s cubic-bezier(.16,1,.3,1) 2.45s forwards;
+  }
+  @keyframes grow { to { width: clamp(180px, 28vw, 340px); } }
+
+  .enter-btn {
+    position: relative;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(.6rem, 1.2vw, .72rem);
+    font-weight: 500;
+    letter-spacing: .24em;
+    text-transform: uppercase;
+    color: rgba(232,234,246,.85);
+    background: transparent;
+    border: 1px solid rgba(79,111,255,.32);
+    padding: 16px 44px;
+    cursor: none;
+    outline: none;
+    overflow: hidden;
+    opacity: 0; transform: translateY(10px);
+    animation: up .9s cubic-bezier(.16,1,.3,1) 2.75s forwards;
+    transition: border-color .5s, color .4s, box-shadow .5s;
+  }
+  .enter-btn::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(128deg,
+      rgba(79,111,255,.14) 0%,
+      rgba(124,92,252,.1) 100%);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform .55s cubic-bezier(.16,1,.3,1);
+  }
+  .enter-btn::after {
+    content: '';
+    position: absolute; inset: -2px;
+    border: 1px solid transparent;
+    transition: border-color .4s, box-shadow .4s;
+  }
+  .enter-btn:hover {
+    border-color: rgba(79,111,255,.7);
+    color: #fff;
+    box-shadow: 0 0 28px rgba(79,111,255,.28), 0 0 60px rgba(79,111,255,.1), inset 0 0 18px rgba(79,111,255,.06);
+  }
+  .enter-btn:hover::before { transform: scaleX(1); }
+  .enter-btn:hover::after { border-color: rgba(124,92,252,.18); box-shadow: 0 0 40px rgba(124,92,252,.12); }
+  .btn-inner { position: relative; z-index: 1; }
+
+  .credit {
+    position: fixed; bottom: 28px; left: 50%;
+    transform: translateX(-50%);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(.42rem, .9vw, .52rem);
+    font-weight: 300;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: rgba(232,234,246,.14);
+    z-index: 10; white-space: nowrap;
+    opacity: 0; animation: up .8s ease 3.2s forwards;
+  }
+
+  /* ──────────── TRANSITION VEIL ──────────── */
+  #veil {
+    position: fixed; inset: 0; z-index: 8000;
+    pointer-events: none; opacity: 0;
+    background: #01010a;
+    transition: opacity .7s cubic-bezier(.4,0,.2,1);
+  }
+  #veil.show { opacity: 1; pointer-events: all; }
+
+  @keyframes up {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 768px) {
+    #cur, #cur-ring { display: none; }
+    body { cursor: auto; }
+    .eyebrow { font-size: clamp(.42rem, 2vw, .62rem); letter-spacing: .16em; margin-bottom: 20px; }
+    .name { font-size: clamp(2rem, 6vw, 5rem); line-height: .95; }
+    .sub { font-size: clamp(.42rem, 1.5vw, .62rem); margin-top: 16px; letter-spacing: .16em; }
+    .divider { margin: 24px 0 20px; width: clamp(100px, 60vw, 280px); }
+    .enter-btn { padding: 16px 40px; font-size: clamp(.56rem, 1.8vw, .72rem); min-width: 160px; border-width: 1.5px; }
+    .credit { font-size: clamp(.38rem, 1.2vw, .52rem); bottom: 20px; }
+  }
+
+  @media (max-width: 480px) {
+    .eyebrow, .sub, .credit { letter-spacing: .12em; }
+    .enter-btn { padding: 14px 36px; font-size: clamp(.52rem, 1.6vw, .66rem); min-width: auto; }
+    .divider { margin: 20px 0 16px; width: clamp(80px, 70vw, 240px); }
+    .name-wrap { margin-bottom: 12px; }
+    .stage { padding: 20px; }
+    .name { font-size: clamp(1.8rem, 5.5vw, 3.5rem); }
+  }
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-ring"></div>
+<canvas id="c"></canvas>
+<div class="vig"></div>
+<div class="grain"></div>
+
+<div class="stage">
+  <div class="eyebrow">Portfolio &nbsp;·&nbsp; 2025</div>
+  <div class="name-wrap">
+    <span class="name name-l1">Charles Jr</span><br>
+    <span class="name name-l2">Uzoma</span>
+  </div>
+  <p class="sub">Founder&#8202;·&#8202;Web Developer&#8202;·&#8202;Designer</p>
+  <div class="divider"></div>
+  <button class="enter-btn" id="enterBtn" aria-label="Enter portfolio">
+    <span class="btn-inner">Ready to Explore &thinsp;&#8594;</span>
+  </button>
+</div>
+
+<p class="credit">Web Developer &nbsp;&middot;&nbsp; UI/UX Designer &nbsp;&middot;&nbsp; Aspiring Software Engineer</p>
+<div id="veil"></div>
+
+<script>
+/* ══════════════════════════════════════════════════════════
+   BLACK HOLE GRAVITATIONAL RENDERER
+   ─────────────────────────────────────────────────────────
+   Layer stack (back → front):
+   1. Deep-space star field          twinkle animation
+   2. Nebula wisps                   faint colour clouds
+   3. Outer lensing halo             radial bloom
+   4. Accretion disk (9 rings)       chromatic RGB-split ellipses
+   5. Particle dust cloud (340 pts)  inward spiral with 1/r physics
+   6. Hot-knot prominence            bright orbiting blob
+   7. Photon sphere                  thin bright ring at horizon
+   8. Gravitational lens shimmer     flicker halo
+   9. Event horizon                  pure-dark circle
+   ─────────────────────────────────────────────────────────
+   Interactions:
+   • Cursor parallax: targetOX/OY ±30/20px, eased at 4%/frame
+   • Hover boost:     hoverBoost 0→1 eased at 5.5%/frame
+                      Affects: ring radii, particle speed, hotknot size
+   • Click sequence:  boost overshoots → flash → veil → navigate
+══════════════════════════════════════════════════════════ */
+
+const canvas = document.getElementById('c');
+const ctx    = canvas.getContext('2d');
+
+let W, H, CX, CY, BASE_R;
+let t = 0;
+let timeDrift = 0;          // constant cosmic time flow
+let autonomousSpin = 0;     // autonomous rotation driver
+let targetOX = 0, targetOY = 0;
+let oX = 0, oY = 0;
+let hoverBoost = 0, _hoverTarget = 0;
+let transitioning = false;
+
+/* ── STAR FIELD ─────────────────────────────────────── */
+const STARS = [];
+function initStars() {
+  STARS.length = 0;
+  for (let i = 0; i < 800; i++) STARS.push({
+    x: Math.random() * W, y: Math.random() * H,
+    r: Math.random() * 1.3 + .4,
+    a: Math.random() * .08 + .96,
+    spd: Math.random() * .045 + .012,
+    off: Math.random() * Math.PI * 2,
+  });
+}
+function drawStars(t) {
+  const breathing = 1 + Math.sin(timeDrift * 8.4) * 0.65;
+  const breatheForce = (breathing - 1) / 0.65;
+  
+  STARS.forEach(s => {
+    const dx = s.x - CX;
+    const dy = s.y - CY;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    const angle = Math.atan2(dy, dx);
+    
+    const breathePull = breatheForce * dist * 1.8;
+    const newDist = dist + breathePull;
+    const px = CX + Math.cos(angle) * newDist;
+    const py = CY + Math.sin(angle) * newDist;
+    
+    const twinkle = Math.sin(t * s.spd + s.off);
+    const a = Math.min(s.a * (0.98 + twinkle * 0.75), 1);
+    
+    ctx.beginPath();
+    ctx.arc(px, py, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(215,225,255,${a})`;
+    ctx.shadowColor = `rgba(220,235,255,${Math.min(a * 0.9, 1)})`;
+    ctx.shadowBlur = 12 + twinkle * 10;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+  });
+}
+
+/* ── NEBULA WISPS ────────────────────────────────────── */
+function drawNebula() {
+  [
+    { dx: -W*.28, dy: -H*.18, rx: W*.32, ry: H*.22, h: 228, a: .024 },
+    { dx:  W*.22, dy:  H*.16, rx: W*.28, ry: H*.18, h: 262, a: .019 },
+    { dx: -W*.08, dy:  H*.20, rx: W*.18, ry: H*.13, h: 245, a: .016 },
+  ].forEach(d => {
+    const gx = CX + d.dx, gy = CY + d.dy;
+    const maxR = Math.max(d.rx, d.ry);
+    const g = ctx.createRadialGradient(gx, gy, 0, gx, gy, maxR);
+    g.addColorStop(0,  `hsla(${d.h},68%,55%,${d.a})`);
+    g.addColorStop(.5, `hsla(${d.h},60%,40%,${d.a*.4})`);
+    g.addColorStop(1,  `hsla(${d.h},50%,30%,0)`);
+    ctx.save();
+    ctx.translate(gx, gy);
+    ctx.scale(d.rx / maxR, d.ry / maxR);
+    ctx.beginPath(); ctx.arc(0, 0, maxR, 0, Math.PI * 2);
+    ctx.fillStyle = g; ctx.globalAlpha = 1; ctx.fill();
+    ctx.restore();
+  });
+}
+
+/* ── OUTER HALO ──────────────────────────────────────── */
+function drawHalo(cx, cy, r, t) {
+  const boost = 1 + hoverBoost * .12;
+  const pulse = 1 + Math.sin(t * .011) * .025 + Math.sin(t * .0073) * .014;
+  const R = r * 4.2 * pulse * boost * (1 + Math.sin(timeDrift * 3) * 0.04);
+  const g = ctx.createRadialGradient(cx, cy, r*.4, cx, cy, R);
+  g.addColorStop(0,   'hsla(228,80%,65%,0)');
+  g.addColorStop(.28, `hsla(228,75%,60%,${.048*boost})`);
+  g.addColorStop(.52, `hsla(245,70%,58%,${.032*boost})`);
+  g.addColorStop(.72, `hsla(262,65%,55%,${.018*boost})`);
+  g.addColorStop(1,   'hsla(262,60%,50%,0)');
+  ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI*2);
+  ctx.fillStyle = g; ctx.globalAlpha = 1; ctx.fill();
+}
+
+/* ── ACCRETION DISK ──────────────────────────────────── */
+function drawDisk(cx, cy, r, t) {
+  const boost = 1 + hoverBoost * .055;
+  const rings = [
+    [3.40,.310, .16,  .00048,.7, .18,[218,238]],
+    [3.10,.280, .04,-.00038,.6, .22,[224,244]],
+    [2.85,.255,-.10,  .00062,.5, .26,[228,248]],
+    [2.60,.225, .28,-.00055,.8, .30,[232,252]],
+    [2.35,.198,-.06,  .00085,1.0,.35,[228,260]],
+    [2.10,.172, .20,-.00078,1.4,.40,[230,256]],
+    [1.85,.148,-.14,  .00110,1.8,.46,[225,252]],
+    [1.60,.122, .08,-.00140,2.2,.55,[222,248]],
+    [1.38,.096,-.04,  .00185,2.8,.68,[220,245]],
+  ];
+
+  rings.forEach(([rxf,ryf,tilt,spd,lw,al,hues]) => {
+    const rx  = r * rxf * boost;
+    const ry  = r * ryf;
+    const rot = tilt + t * spd + autonomousSpin * 3;
+    const [h1, h2] = hues;
+    const hm  = (h1 + h2) >> 1;
+
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(rot);
+
+    // Chromatic aberration: 3 slightly offset ellipses (R, G, B channels)
+    [
+      { dx:  1.4, h: h1, al: al*.5,  lw: lw*.6 },
+      { dx:  0,   h: hm, al: al,     lw        },
+      { dx: -1.4, h: h2, al: al*.52, lw: lw*.5 },
+    ].forEach(({ dx, h, al: a, lw: w }) => {
+      const gx1 = rx*.65, gx2 = -rx*.65;
+      const g = ctx.createLinearGradient(gx2, 0, gx1, 0);
+      const c = (opacity) => `hsla(${h},88%,70%,${opacity})`;
+      g.addColorStop(0,   c(0));
+      g.addColorStop(.18, c(a*.3));
+      g.addColorStop(.42, c(a));
+      g.addColorStop(.58, c(a*.72));
+      g.addColorStop(.78, c(a*.24));
+      g.addColorStop(1,   c(0));
+      ctx.beginPath();
+      ctx.ellipse(dx*.5, 0, rx, ry, 0, 0, Math.PI*2);
+      ctx.strokeStyle = g;
+      ctx.lineWidth   = w;
+      ctx.globalAlpha = 1;
+      ctx.stroke();
+    });
+    ctx.restore();
+  });
+}
+
+/* ── HOT KNOT ────────────────────────────────────────── */
+function drawHotKnot(cx, cy, r, t) {
+  const boost = 1 + hoverBoost * .15;
+  const angle = t * .0018;
+  const kx = cx + Math.cos(angle) * r * 2.05;
+  const ky = cy + Math.sin(angle) * r * .155;
+  const kr = r * .22 * boost;
+  const g = ctx.createRadialGradient(kx, ky, 0, kx, ky, kr);
+  g.addColorStop(0,   `rgba(200,220,255,${.55*boost})`);
+  g.addColorStop(.35, `rgba(140,170,255,${.22*boost})`);
+  g.addColorStop(.7,  `rgba(80,110,255,${.08*boost})`);
+  g.addColorStop(1,   'rgba(50,80,200,0)');
+  ctx.save();
+  ctx.translate(kx, ky);
+  ctx.scale(1, .55);
+  ctx.beginPath(); ctx.arc(0, 0, kr, 0, Math.PI*2);
+  ctx.fillStyle = g; ctx.globalAlpha = 1; ctx.fill();
+  ctx.restore();
+}
+
+/* ── PARTICLES ───────────────────────────────────────── */
+const NPART = 340;
+const parts = [];
+
+class Particle {
+  reset(cold = false) {
+    this.angle = Math.random() * Math.PI * 2;
+    this.r     = BASE_R * (.55 + Math.random() * .9);
+    this.vr    = -(Math.random() * .14 + .04);
+    this.omega = (Math.random() * .0018 + .0006) * (Math.random() > .5 ? 1 : -1);
+    this.size  = Math.random() * 1.3 + .15;
+    this.hue   = Math.random() > .55 ? 228 : 262;
+    this.sat   = 70 + Math.random() * 25;
+    this.lig   = 65 + Math.random() * 20;
+    this.alpha = Math.random() * .5 + .1;
+    this.tiltY = (Math.random() - .5) * .38;
+    this.life  = cold ? Math.random() : 0;
+    this.decay = Math.random() * .0018 + .0004;
+  }
+  constructor() { this.reset(true); }
+  update() {
+    const boost = 1 + hoverBoost * .4;
+    const omegaScaled = this.omega * (BASE_R / (this.r + BASE_R * .1)) * boost;
+    this.angle += omegaScaled;
+    this.r -= (0.12 + Math.sin(timeDrift + this.angle) * 0.04) * boost;
+    this.life  += this.decay * boost;
+    if (this.r < BASE_R * .07 || this.life > 1) this.reset(false);
+  }
+  draw() {
+    const px = CX + oX * .55 + Math.cos(this.angle) * this.r;
+    const py = CY + oY * .3  + Math.sin(this.angle) * this.r * .35 + this.tiltY * this.r;
+    const la = Math.min(this.life / .08, 1) * Math.min((1 - this.life) / .18, 1);
+    ctx.beginPath();
+    ctx.arc(px, py, this.size, 0, Math.PI*2);
+    ctx.fillStyle = `hsla(${this.hue},${this.sat}%,${this.lig}%,${this.alpha * la})`;
+    ctx.fill();
+  }
+}
+function initParts() {
+  parts.length = 0;
+  for (let i = 0; i < NPART; i++) parts.push(new Particle());
+}
+
+/* ── PHOTON SPHERE ───────────────────────────────────── */
+function drawPhotonSphere(cx, cy, r) {
+  const boost = 1 + hoverBoost * .08;
+  const rOut  = r * 1.09 * boost;
+  const g = ctx.createRadialGradient(cx, cy, r*.72, cx, cy, rOut);
+  g.addColorStop(0,   'rgba(255,255,255,0)');
+  g.addColorStop(.55, 'rgba(180,200,255,.06)');
+  g.addColorStop(.80, 'rgba(140,180,255,.16)');
+  g.addColorStop(.92, 'rgba(200,220,255,.28)');
+  g.addColorStop(1,   'rgba(255,255,255,0)');
+  ctx.beginPath(); ctx.arc(cx, cy, rOut, 0, Math.PI*2);
+  ctx.fillStyle = g; ctx.globalAlpha = 1; ctx.fill();
+}
+
+/* ── LENS SHIMMER ────────────────────────────────────── */
+function drawLens(cx, cy, r, t) {
+  const shimR = r * 1.35;
+  const flicker = .04 + Math.sin(t * .07 + .4) * .02;
+  const g = ctx.createRadialGradient(cx, cy, r*.95, cx, cy, shimR);
+  g.addColorStop(0,   'rgba(160,190,255,0)');
+  g.addColorStop(.4,  `rgba(140,170,255,${flicker})`);
+  g.addColorStop(.75, `rgba(120,150,255,${flicker*.5})`);
+  g.addColorStop(1,   'rgba(100,130,255,0)');
+  ctx.beginPath(); ctx.arc(cx, cy, shimR, 0, Math.PI*2);
+  ctx.fillStyle = g; ctx.globalAlpha = 1; ctx.fill();
+}
+
+/* ── EVENT HORIZON ───────────────────────────────────── */
+function drawHorizon(cx, cy, r) {
+  const g = ctx.createRadialGradient(cx, cy, r*.55, cx, cy, r);
+  g.addColorStop(0,   '#01010c');
+  g.addColorStop(.78, '#01010c');
+  g.addColorStop(.92, '#03040f');
+  g.addColorStop(1,   '#060820');
+  ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2);
+  ctx.fillStyle = g; ctx.globalAlpha = 1; ctx.fill();
+}
+
+/* ── RENDER LOOP ─────────────────────────────────────── */
+function render() {
+  t++;
+  timeDrift += 0.0025;          // constant cosmic time flow
+  autonomousSpin += 0.0008;     // autonomous rotation driver
+
+  oX += (targetOX - oX) * .04;
+  oY += (targetOY - oY) * .04;
+  hoverBoost += (_hoverTarget - hoverBoost) * .055;
+
+  const breathing = 1 + Math.sin(timeDrift * 8.4) * 0.65;
+
+  const cx = CX + oX * 0.6;
+  const cy = CY + oY * 0.6;
+  const r  = BASE_R * breathing * (1 + hoverBoost * .055);
+
+  ctx.globalAlpha = 1;
+  ctx.fillStyle = '#01010a';
+  ctx.fillRect(0, 0, W, H);
+
+  drawStars(t);
+
+  ctx.save(); ctx.translate(oX*.15, oY*.1);
+  drawNebula(); ctx.restore();
+
+  drawHalo(cx*.6 + CX*.4, cy*.7 + CY*.3, r, t);
+  drawDisk(cx, cy, r, t);
+
+  parts.forEach(p => { p.update(); p.draw(); });
+
+  drawHotKnot(cx, cy, r, t);
+  drawPhotonSphere(cx, cy, r);
+  drawLens(cx, cy, r, t);
+  drawHorizon(cx, cy, r);
+
+  requestAnimationFrame(render);
+}
+
+/* ── RESIZE ──────────────────────────────────────────── */
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  CX = W / 2; CY = H / 2;
+  BASE_R = Math.min(W, H) * .135;
+  initStars(); initParts();
+}
+window.addEventListener('resize', resize);
+resize(); render();
+
+/* ── CURSOR ──────────────────────────────────────────── */
+const curEl  = document.getElementById('cur');
+const ringEl = document.getElementById('cur-ring');
+let curX = 0, curY = 0, lagX = 0, lagY = 0;
+
+document.addEventListener('mousemove', e => {
+  curX = e.clientX; curY = e.clientY;
+  curEl.style.left = curX + 'px'; curEl.style.top = curY + 'px';
+  const nx = (e.clientX - W/2) / (W/2);
+  const ny = (e.clientY - H/2) / (H/2);
+  targetOX = nx * 30; targetOY = ny * 20;
+});
+
+(function ringLoop() {
+  lagX += (curX - lagX) * .2; lagY += (curY - lagY) * .2;
+  ringEl.style.left = lagX + 'px'; ringEl.style.top = lagY + 'px';
+  requestAnimationFrame(ringLoop);
+});
+
+/* ── BUTTON ──────────────────────────────────────────── */
+const enterBtn = document.getElementById('enterBtn');
+
+enterBtn.addEventListener('mouseenter', () => { document.body.classList.add('h-btn');    _hoverTarget = 1; });
+enterBtn.addEventListener('mouseleave', () => { document.body.classList.remove('h-btn'); _hoverTarget = 0; });
+
+/* ── PORTAL TRANSITION ───────────────────────────────── */
+const veil = document.getElementById('veil');
+
+enterBtn.addEventListener('click', () => {
+  if (transitioning) return;
+  transitioning = true;
+  enterBtn.disabled = true;
+
+  // Overshoot boost — black hole surges
+  _hoverTarget = 3.2;
+
+  // Snap parallax to center
+  setTimeout(() => { targetOX = 0; targetOY = 0; oX *= .2; oY *= .2; }, 80);
+
+  // Bright implosion flash expands from center
+  const flash = document.createElement('div');
+  Object.assign(flash.style, {
+    position: 'fixed', inset: 0, zIndex: 8500, pointerEvents: 'none',
+    background: 'radial-gradient(circle at 50% 50%, rgba(110,140,255,.92) 0%, rgba(12,12,45,.85) 38%, #01010a 100%)',
+    opacity: '0', borderRadius: '50%',
+    transform: 'scale(.04)', transformOrigin: '50% 50%',
+    transition: 'none',
+  });
+  document.body.appendChild(flash);
+
+  setTimeout(() => {
+    flash.style.transition = 'opacity .28s ease, transform .52s cubic-bezier(.4,0,.2,1), border-radius .52s ease';
+    flash.style.opacity     = '1';
+    flash.style.transform   = 'scale(3.8)';
+    flash.style.borderRadius = '0';
+  }, 140);
+
+  // Fade to dark
+  setTimeout(() => {
+    veil.style.transition = 'opacity .5s ease';
+    veil.classList.add('show');
+  }, 460);
+
+  // Navigate — change to your portfolio filename
+  setTimeout(() => {
+    window.location.href = 'porfolio.html';
+  }, 960);
+});
+
+enterBtn.addEventListener('keydown', e => {
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); enterBtn.click(); }
+});
+
+/* ── ENTRY FADE ──────────────────────────────────────── */
+veil.classList.add('show');
+veil.style.transition = 'none';
+setTimeout(() => {
+  veil.style.transition = 'opacity 1.1s ease';
+  veil.classList.remove('show');
+}, 60);
+</script>
+</body>
+</html>

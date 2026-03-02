@@ -1,0 +1,1498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Charles Jr Uzoma — Web Developer & Designer</title>
+<meta name="description" content="Web Developer, UI/UX Designer & Aspiring Software Engineer. I design for clarity, then build for scale.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#040408;
+  --bg2:#07080f;
+  --surface:#0c0e1a;
+  --surface2:#111420;
+  --border:rgba(99,118,255,.12);
+  --border-bright:rgba(99,118,255,.28);
+  --blue:#4f6fff;
+  --blue-dim:#2d3d9a;
+  --blue-glow:rgba(79,111,255,.18);
+  --blue-glow-bright:rgba(79,111,255,.35);
+  --violet:#7c5cfc;
+  --violet-dim:rgba(124,92,252,.1);
+  --white:#e8eaf6;
+  --white-dim:rgba(232,234,246,.55);
+  --white-faint:rgba(232,234,246,.22);
+  --mid:rgba(232,234,246,.4);
+  --faint:rgba(232,234,246,.15);
+  --syne:'Syne',sans-serif;
+  --inter:'Inter',sans-serif;
+  --mono:'JetBrains Mono',monospace;
+  --ease:cubic-bezier(.4,0,.2,1);
+  --ease-out:cubic-bezier(.16,1,.3,1);
+}
+html{scroll-behavior:smooth;overflow-x:hidden;font-size:16px}
+body{background:var(--bg);color:var(--white);font-family:var(--inter);font-weight:300;line-height:1.6;overflow-x:hidden;cursor:none;-webkit-font-smoothing:antialiased}
+
+#cur{width:12px;height:12px;background:var(--blue);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .15s var(--ease),width .3s,height .3s,background .3s;mix-blend-mode:screen;box-shadow:0 0 14px 3px rgba(79,111,255,.8)}
+#cur-ring{width:48px;height:48px;border:1.5px solid rgba(79,111,255,.5);border-radius:50%;position:fixed;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .4s var(--ease),height .4s var(--ease),border-color .3s,opacity .3s}
+.ch #cur{transform:translate(-50%,-50%) scale(3.5);background:var(--violet)}
+.ch #cur-ring{width:72px;height:72px;border-color:rgba(124,92,252,.4);opacity:.7}
+.cl #cur{background:#fff;transform:translate(-50%,-50%) scale(1.8)}
+
+#ambient-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:1;width:100%;height:100%}
+
+
+@keyframes coreBreath{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.7}50%{transform:translate(-50%,-50%) scale(1.08);opacity:1}}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:28px 80px;display:flex;justify-content:space-between;align-items:center;transition:all .6s var(--ease)}
+nav::after{content:'';position:absolute;bottom:0;left:64px;right:64px;height:1px;background:var(--border);opacity:0;transition:opacity .6s}
+nav.sc{background:rgba(4,4,8,.85);backdrop-filter:blur(24px) saturate(1.5);padding:18px 80px}
+nav.sc::after{opacity:1}
+
+.nlogo{font-family:var(--syne);font-weight:700;font-size:1.15rem;letter-spacing:.01em;text-decoration:none;color:var(--white);display:flex;flex-direction:column;gap:2px;opacity:0;animation:fadeUp .8s var(--ease-out) .1s forwards}
+.nlogo span{font-size:.72rem;font-family:var(--mono);letter-spacing:.22em;text-transform:uppercase;color:var(--blue);font-weight:300}
+
+.nlinks{display:flex;gap:36px;list-style:none;opacity:0;animation:fadeUp .8s var(--ease-out) .25s forwards}
+.nlinks a{font-size:.85rem;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;color:var(--mid);transition:color .3s;position:relative;font-family:var(--inter);font-weight:400}
+.nlinks a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--blue);transition:width .4s var(--ease-out);box-shadow:0 0 8px var(--blue)}
+.nlinks a:hover{color:var(--white)}
+.nlinks a:hover::after{width:100%}
+
+.ncta{font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;padding:13px 28px;border:1px solid var(--border-bright);color:var(--blue);font-family:var(--inter);font-weight:400;position:relative;overflow:hidden;display:inline-block;opacity:0;animation:fadeUp .8s var(--ease-out) .4s forwards;transition:color .4s,border-color .4s,box-shadow .4s}
+.ncta::before{content:'';position:absolute;inset:0;background:var(--blue);transform:scaleX(0);transform-origin:left;transition:transform .4s var(--ease)}
+.ncta:hover{color:#fff;border-color:var(--blue);box-shadow:0 0 20px var(--blue-glow)}
+.ncta:hover::before{transform:scaleX(1)}
+.ncta .nb{position:relative;z-index:1}
+
+.hbtn{display:none;flex-direction:column;gap:6px;background:none;border:none;cursor:none;padding:10px;width:48px;height:48px;min-width:48px;justify-content:center;align-items:center}
+.hbtn span{display:block;width:24px;height:2px;background:var(--white);transition:all .35s;border-radius:1px}
+.hbtn.op span:nth-child(1){transform:translateY(8px) rotate(45deg)}
+.hbtn.op span:nth-child(2){opacity:0;transform:scaleX(0)}
+.hbtn.op span:nth-child(3){transform:translateY(-8px) rotate(-45deg)}
+
+#hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;position:relative;overflow:hidden}
+
+.hleft{display:flex;flex-direction:column;justify-content:center;padding:140px 80px 90px;position:relative;z-index:2}
+
+.heyebrow{font-family:var(--mono);font-size:.82rem;letter-spacing:.26em;text-transform:uppercase;color:var(--blue);margin-bottom:32px;display:flex;align-items:center;gap:14px;opacity:0;animation:fadeUp .9s var(--ease-out) .6s forwards}
+.heyebrow::before{content:'';display:block;width:24px;height:1px;background:var(--blue);flex-shrink:0;box-shadow:0 0 8px var(--blue)}
+
+.hname{font-family:var(--syne);font-size:clamp(4.5rem,8vw,9.5rem);font-weight:800;line-height:.92;letter-spacing:-.03em;overflow:hidden;margin-bottom:0}
+.hn{display:block;overflow:hidden}
+.hni{display:block;transform:translateY(110%);opacity:0;animation:revUp 1.2s var(--ease-out) forwards}
+.hn:nth-child(1) .hni{animation-delay:.7s;color:var(--white)}
+.hn:nth-child(2) .hni{animation-delay:.88s;background:linear-gradient(135deg,var(--blue) 0%,var(--violet) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+.htwrap{margin-top:24px;min-height:2rem;opacity:0;animation:fadeIn .8s ease 1.6s forwards}
+.htrole{font-family:var(--inter);font-size:clamp(1.1rem,2vw,1.65rem);font-weight:300;color:var(--mid);display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+.twt{color:var(--white);font-weight:400}
+.twc{display:inline-block;width:2px;height:1em;background:var(--blue);margin-left:2px;animation:blink 1.1s step-end infinite;vertical-align:middle;box-shadow:0 0 6px var(--blue)}
+
+.hstmt{margin-top:36px;max-width:520px;font-size:1.12rem;color:var(--mid);line-height:1.85;opacity:0;animation:fadeUp .9s var(--ease-out) 2s forwards}
+
+.hctas{display:flex;gap:14px;margin-top:44px;opacity:0;animation:fadeUp .9s var(--ease-out) 2.15s forwards;flex-wrap:wrap}
+
+.btn-primary{display:inline-flex;align-items:center;gap:10px;background:var(--blue);color:#fff;text-decoration:none;font-size:.9rem;letter-spacing:.12em;text-transform:uppercase;padding:18px 38px;font-family:var(--inter);font-weight:500;position:relative;overflow:hidden;transition:transform .3s,box-shadow .4s;border:1px solid transparent}
+.btn-primary::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--blue),var(--violet));opacity:0;transition:opacity .4s}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(79,111,255,.45)}
+.btn-primary:hover::before{opacity:1}
+.btn-primary span{position:relative;z-index:1}
+
+.btn-ghost{display:inline-flex;align-items:center;gap:10px;color:var(--white-dim);text-decoration:none;font-size:.9rem;letter-spacing:.12em;text-transform:uppercase;padding:18px 38px;font-family:var(--inter);font-weight:400;border:1px solid var(--border);position:relative;overflow:hidden;transition:all .4s}
+.btn-ghost::before{content:'';position:absolute;inset:0;background:var(--surface2);transform:scaleX(0);transform-origin:left;transition:transform .4s var(--ease)}
+.btn-ghost:hover{border-color:var(--border-bright);color:var(--white);box-shadow:0 0 20px var(--blue-glow)}
+.btn-ghost:hover::before{transform:scaleX(1)}
+.btn-ghost span{position:relative;z-index:1}
+
+.hscroll{margin-top:52px;display:flex;align-items:center;gap:16px;opacity:0;animation:fadeIn 1s ease 2.5s forwards}
+.scroll-line{width:44px;height:1px;background:var(--faint);position:relative;overflow:hidden}
+.scroll-line::after{content:'';position:absolute;left:-100%;top:0;width:100%;height:100%;background:var(--blue);animation:scrollAnim 2.4s ease-in-out 2.5s infinite;box-shadow:0 0 6px var(--blue)}
+.hscroll p{font-family:var(--mono);font-size:.76rem;letter-spacing:.2em;text-transform:uppercase;color:var(--faint)}
+
+.hright{position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+
+.hero-core{position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(79,111,255,.18) 0%,rgba(124,92,252,.1) 40%,transparent 70%);animation:coreBreath 6s ease-in-out infinite;pointer-events:none}
+.hero-core-ring{position:absolute;width:420px;height:420px;border-radius:50%;border:1px solid rgba(79,111,255,.12);animation:ringRotate 20s linear infinite;pointer-events:none}
+.hero-core-ring::before{content:'';position:absolute;top:-3px;left:50%;width:6px;height:6px;border-radius:50%;background:var(--blue);box-shadow:0 0 12px 4px var(--blue);transform:translateX(-50%)}
+.hero-core-ring2{position:absolute;width:560px;height:560px;border-radius:50%;border:1px solid rgba(124,92,252,.07);animation:ringRotate 32s linear infinite reverse;pointer-events:none}
+
+.picw{position:relative;z-index:3;width:min(390px,80%);aspect-ratio:3/4;opacity:0;animation:fadeIn 1.4s ease 1.1s forwards}
+.picb{position:absolute;inset:0;border:1px solid var(--border-bright);z-index:4;pointer-events:none;transition:all .6s var(--ease-out);box-shadow:0 0 40px var(--blue-glow),inset 0 0 40px rgba(79,111,255,.04)}
+.picb::before{content:'';position:absolute;top:-10px;left:-10px;right:10px;bottom:10px;border:1px solid var(--border);z-index:-1;transition:all .6s var(--ease-out)}
+.picw:hover .picb{top:8px;left:8px;box-shadow:0 0 60px var(--blue-glow-bright),inset 0 0 60px rgba(79,111,255,.06)}
+.picw:hover .picb::before{top:-18px;left:-18px}
+
+.pici{width:100%;height:100%;background:linear-gradient(145deg,#0d0f1c 0%,#12152a 50%,#0a0c18 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;position:relative;overflow:hidden}
+.pici::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 24px,rgba(79,111,255,.025) 24px,rgba(79,111,255,.025) 25px)}
+.pici::after{content:'';position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(79,111,255,.12) 0%,transparent 70%);top:-60px;right:-60px;animation:coreBreath 5s ease-in-out infinite}
+.picico{width:72px;height:72px;border:1px solid var(--border-bright);border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--surface);position:relative;z-index:1;box-shadow:0 0 20px var(--blue-glow)}
+.piclbl{font-family:var(--mono);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--mid);text-align:center;line-height:2.2;position:relative;z-index:1}
+.pichint{position:absolute;bottom:14px;left:0;right:0;text-align:center;font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;color:var(--faint)}
+.pict{position:absolute;bottom:-1px;right:-1px;background:linear-gradient(135deg,var(--blue),var(--violet));color:#fff;padding:10px 20px;font-family:var(--mono);font-size:.75rem;letter-spacing:.16em;text-transform:uppercase;z-index:5;font-weight:400}
+
+.hbadge{position:absolute;top:24px;left:-4px;background:var(--surface);border:1px solid var(--border-bright);padding:10px 16px;z-index:6;opacity:0;animation:slideRight .9s var(--ease-out) 1.8s forwards;box-shadow:0 0 20px var(--blue-glow)}
+.badge{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--mid)}
+.dg{width:6px;height:6px;border-radius:50%;background:#22c55e;flex-shrink:0;box-shadow:0 0 8px rgba(34,197,94,.6);animation:pulse 2.5s ease-in-out infinite}
+
+.hddlbl{position:absolute;right:20px;bottom:40px;font-family:var(--mono);font-size:.72rem;font-weight:300;color:var(--faint);writing-mode:vertical-rl;letter-spacing:.18em;text-transform:uppercase;z-index:3;opacity:0;animation:fadeIn 1s ease 2.2s forwards}
+
+.mqs{overflow:hidden;padding:14px 0;position:relative;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--surface)}
+.mqs::before,.mqs::after{content:'';position:absolute;top:0;bottom:0;width:80px;z-index:2;pointer-events:none}
+.mqs::before{left:0;background:linear-gradient(90deg,var(--surface),transparent)}
+.mqs::after{right:0;background:linear-gradient(-90deg,var(--surface),transparent)}
+.mqt{display:flex;width:max-content;animation:mqflow 36s linear infinite}
+.mqt:hover{animation-play-state:paused}
+.mqi{font-family:var(--mono);font-size:.9rem;letter-spacing:.18em;text-transform:uppercase;color:var(--mid);padding:0 40px;display:flex;align-items:center;gap:40px;white-space:nowrap;transition:color .3s}
+.mqi:hover{color:var(--blue)}
+.mqd{width:3px;height:3px;background:var(--blue);border-radius:50%;flex-shrink:0;box-shadow:0 0 6px var(--blue)}
+
+section{padding:140px 80px;position:relative}
+.slbl{font-family:var(--mono);font-size:.82rem;letter-spacing:.26em;text-transform:uppercase;color:var(--blue);margin-bottom:28px;display:flex;align-items:center;gap:12px}
+.slbl::before{content:'';display:block;width:16px;height:1px;background:var(--blue);flex-shrink:0;box-shadow:0 0 6px var(--blue)}
+
+.sec-line{position:absolute;top:0;left:80px;right:80px;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent)}
+
+#about{display:grid;grid-template-columns:1fr 1.1fr;gap:120px;align-items:start;background:var(--bg)}
+.asticky{position:sticky;top:120px}
+.ah{font-family:var(--syne);font-size:clamp(3rem,5.2vw,6rem);font-weight:800;line-height:1;letter-spacing:-.025em;color:var(--white)}
+.ah em{font-style:normal;background:linear-gradient(135deg,var(--blue),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+.avis{margin-top:40px;height:260px;position:relative;border:1px solid var(--border);overflow:hidden;background:var(--surface)}
+.avis-core{position:absolute;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(79,111,255,.2) 0%,rgba(124,92,252,.1) 50%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);animation:coreBreath 5s ease-in-out infinite}
+.avis-ring{position:absolute;width:180px;height:180px;border-radius:50%;border:1px solid rgba(79,111,255,.2);top:50%;left:50%;transform:translate(-50%,-50%);animation:ringRotate 12s linear infinite}
+.avis-ring2{position:absolute;width:240px;height:240px;border-radius:50%;border:1px solid rgba(124,92,252,.1);top:50%;left:50%;transform:translate(-50%,-50%);animation:ringRotate 20s linear infinite reverse}
+.avis-txt{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--syne);font-size:3rem;font-weight:800;letter-spacing:-.04em;background:linear-gradient(135deg,rgba(79,111,255,.3),rgba(124,92,252,.2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;user-select:none;animation:dx 12s ease-in-out infinite alternate}
+.avis-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:32px 32px;opacity:.4}
+
+.ac p{font-size:1.15rem;line-height:2;color:var(--mid);font-weight:300;margin-bottom:24px}
+.ac p strong{font-weight:500;color:var(--white)}
+.aquote{padding:28px 32px;border-left:2px solid var(--blue);margin:40px 0;background:rgba(79,111,255,.05);position:relative;box-shadow:inset 0 0 30px rgba(79,111,255,.03)}
+.aquote::before{content:'"';position:absolute;top:-16px;left:24px;font-family:var(--syne);font-size:5rem;line-height:1;color:rgba(79,111,255,.15);font-weight:800}
+.aquote p{font-family:var(--syne);font-size:1.42rem;font-weight:600;line-height:1.5;color:var(--white-dim);margin-bottom:0;position:relative}
+.astats{display:grid;grid-template-columns:1fr 1fr;gap:1px;margin-top:40px;background:var(--border)}
+.sb{background:var(--surface);padding:36px 28px;transition:background .4s;position:relative;overflow:hidden}
+.sb::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1px;background:var(--blue);box-shadow:0 0 8px var(--blue);transition:width .6s var(--ease-out)}
+.sb:hover{background:var(--surface2)}
+.sb:hover::after{width:100%}
+.sn{font-family:var(--syne);font-size:3.8rem;font-weight:800;line-height:1;color:var(--white);display:block;letter-spacing:-.03em}
+.sl{font-size:.84rem;letter-spacing:.14em;text-transform:uppercase;color:var(--mid);display:block;margin-top:8px;font-family:var(--mono)}
+
+#services{background:var(--bg2)}
+.svtop{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:end;margin-bottom:72px}
+.svh{font-family:var(--syne);font-size:clamp(3.5rem,6vw,7rem);font-weight:800;line-height:.95;letter-spacing:-.03em;color:var(--white)}
+.svh em{font-style:normal;background:linear-gradient(135deg,var(--blue),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.svintro{font-size:1.1rem;color:var(--mid);line-height:1.85;font-weight:300;max-width:300px;align-self:end}
+
+.svgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--border)}
+.svc{background:var(--surface);padding:60px 36px;position:relative;overflow:hidden;transition:background .4s;cursor:none}
+.svc::before{content:'';position:absolute;bottom:0;left:0;right:0;height:0;background:linear-gradient(0deg,rgba(79,111,255,.08),transparent);transition:height .5s var(--ease-out)}
+.svc::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1px;background:var(--blue);box-shadow:0 0 10px var(--blue);transition:width .6s var(--ease-out)}
+.svc:hover{background:var(--surface2)}
+.svc:hover::before{height:100%}
+.svc:hover::after{width:100%}
+.svn{font-family:var(--mono);font-size:.78rem;color:var(--blue);letter-spacing:.2em;display:block;margin-bottom:52px;font-weight:300}
+.svname{font-family:var(--syne);font-size:1.55rem;font-weight:700;color:var(--white);line-height:1.2;margin-bottom:14px}
+.svdesc{font-size:1rem;color:var(--mid);line-height:1.8;font-weight:300;max-height:0;overflow:hidden;opacity:0;transition:max-height .5s,opacity .4s}
+.svc:hover .svdesc{max-height:120px;opacity:1}
+.svarr{position:absolute;bottom:28px;right:24px;color:var(--blue);font-size:.9rem;opacity:0;transform:translate(-6px,6px);transition:all .4s;text-shadow:0 0 10px var(--blue)}
+.svc:hover .svarr{opacity:1;transform:translate(0,0)}
+
+#work{background:var(--bg);padding:140px 80px}
+.wkhdr{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:72px}
+.wkh{font-family:var(--syne);font-size:clamp(3.5rem,6vw,7rem);font-weight:800;line-height:.95;letter-spacing:-.03em;color:var(--white)}
+.wkh em{font-style:normal;background:linear-gradient(135deg,var(--blue),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+.proj-row-2{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);margin-bottom:1px}
+.proj-row-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);margin-bottom:1px}
+
+.pcard{background:var(--surface);display:flex;flex-direction:column;cursor:none;overflow:hidden;position:relative;transition:background .4s}
+.pcard:hover{background:var(--surface2)}
+
+.browser-bar{background:#0a0c14;padding:13px 20px;display:flex;align-items:center;gap:10px;flex-shrink:0;border-bottom:1px solid var(--border)}
+.br-dots{display:flex;gap:5px}
+.br-dot{width:9px;height:9px;border-radius:50%}
+.br-dot:nth-child(1){background:#ff5f57}
+.br-dot:nth-child(2){background:#ffbd2e}
+.br-dot:nth-child(3){background:#28c840}
+.br-url{flex:1;background:var(--surface);border-radius:4px;padding:6px 16px;font-family:var(--mono);font-size:.8rem;color:var(--mid);letter-spacing:.04em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border:1px solid var(--border)}
+.br-open{font-family:var(--mono);font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--blue);text-decoration:none;padding:3px 8px;border:1px solid var(--border-bright);transition:all .3s;flex-shrink:0}
+.br-open:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+
+.pcard-preview{position:relative;overflow:hidden;flex-shrink:0;background:var(--bg)}
+.iframe-wrap{position:relative;width:100%;overflow:hidden}
+.iframe-wrap iframe{width:1400px;border:none;display:block;transform-origin:top left;pointer-events:none;transition:filter .4s}
+.pcard:hover .iframe-wrap iframe{pointer-events:auto}
+.proj-row-2 .iframe-wrap{height:440px}
+.proj-row-2 .iframe-wrap iframe{height:700px;transform:scale(0.554)}
+.proj-row-3 .iframe-wrap{height:300px}
+.proj-row-3 .iframe-wrap iframe{height:620px;transform:scale(0.387)}
+.iframe-overlay{position:absolute;inset:0;z-index:2;pointer-events:none}
+
+.iframe-loading{position:absolute;inset:0;z-index:3;background:linear-gradient(110deg,var(--surface) 30%,var(--surface2) 50%,var(--surface) 70%);background-size:400% 100%;animation:shimmer 2s ease-in-out infinite;pointer-events:none;transition:opacity .5s}
+.iframe-loading.hidden{opacity:0;pointer-events:none}
+@keyframes shimmer{0%{background-position:100% 0}100%{background-position:-100% 0}}
+
+.plive{position:absolute;top:10px;right:10px;background:var(--surface);border:1px solid var(--border-bright);color:var(--blue);font-family:var(--mono);font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;padding:5px 10px;z-index:10;display:flex;align-items:center;gap:5px;text-decoration:none;opacity:0;transform:translateY(-4px);transition:all .35s;box-shadow:0 0 14px var(--blue-glow)}
+.pcard:hover .plive{opacity:1;transform:translateY(0)}
+.plive-dot{width:5px;height:5px;border-radius:50%;background:#22c55e;flex-shrink:0;box-shadow:0 0 6px rgba(34,197,94,.6)}
+
+.pcard-body{padding:28px 32px 32px;flex:1;display:flex;flex-direction:column;border-top:1px solid var(--border)}
+.ptag{font-family:var(--mono);font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blue);margin-bottom:8px}
+.ptitle{font-family:var(--syne);font-size:1.4rem;font-weight:700;line-height:1.2;margin-bottom:8px;letter-spacing:-.01em;color:var(--white)}
+.proj-row-2 .ptitle{font-size:1.75rem}
+.pdesc{font-size:1.02rem;color:var(--mid);line-height:1.78;font-weight:300;margin-bottom:14px;flex:1}
+.proj-row-3 .pdesc{-webkit-line-clamp:3;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden}
+.pstack{display:flex;flex-wrap:wrap;gap:5px;margin-top:auto}
+.ptch{font-family:var(--mono);font-size:.76rem;padding:7px 14px;border:1px solid var(--border);color:var(--mid);letter-spacing:.06em;transition:all .3s}
+.pcard:hover .ptch{border-color:var(--border-bright);color:var(--blue)}
+
+.proj-footer{background:var(--surface);padding:18px 24px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border)}
+.pf-txt{font-family:var(--mono);font-size:.82rem;letter-spacing:.1em;color:var(--mid)}
+.pf-link{font-family:var(--mono);font-size:.88rem;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);text-decoration:none;display:flex;align-items:center;gap:10px;transition:gap .3s;text-shadow:0 0 10px rgba(79,111,255,.5)}
+.pf-link:hover{gap:18px}
+
+#process{background:var(--bg2)}
+.prh{font-family:var(--syne);font-size:clamp(3rem,5.5vw,6rem);font-weight:800;line-height:1;letter-spacing:-.025em;max-width:520px;margin-bottom:72px;color:var(--white)}
+.prh em{font-style:normal;background:linear-gradient(135deg,var(--blue),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.prgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border)}
+.prs{background:var(--surface);padding:64px 42px;position:relative;overflow:hidden;transition:background .4s}
+.prs:hover{background:var(--surface2)}
+.prsn{font-family:var(--syne);font-size:7rem;font-weight:800;color:rgba(79,111,255,.1);line-height:1;display:block;margin-bottom:24px;letter-spacing:-.05em;transition:all .4s}
+.prs:hover .prsn{color:rgba(79,111,255,.25);transform:translateY(-4px)}
+.prst{font-family:var(--syne);font-size:1.45rem;font-weight:700;line-height:1.2;margin-bottom:14px;color:var(--white)}
+.prsd{font-size:1.05rem;color:var(--mid);line-height:1.88;font-weight:300}
+.prsl{position:absolute;bottom:0;left:0;width:0;height:1px;background:var(--blue);box-shadow:0 0 10px var(--blue);transition:width .7s var(--ease-out)}
+.prs:hover .prsl{width:100%}
+
+#cred{display:grid;grid-template-columns:1fr 1fr;gap:120px;align-items:center;padding:140px 80px;background:var(--bg)}
+.credh{font-family:var(--syne);font-size:clamp(3rem,5vw,5.5rem);font-weight:800;line-height:1;letter-spacing:-.025em;margin-bottom:28px;color:var(--white)}
+.credh em{font-style:normal;background:linear-gradient(135deg,var(--blue),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.credp{font-size:1.12rem;line-height:1.9;color:var(--mid);font-weight:300;margin-bottom:18px}
+.cligrid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border)}
+.clib{background:var(--surface);padding:38px 34px;transition:all .4s;position:relative;overflow:hidden}
+.clib::before{content:'';position:absolute;inset:0;background:var(--surface2);transform:translateY(102%);transition:transform .45s var(--ease)}
+.clib::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1px;background:var(--blue);box-shadow:0 0 10px var(--blue);transition:width .6s var(--ease-out)}
+.clib:hover::before{transform:translateY(0)}
+.clib:hover::after{width:100%}
+.clib>*{position:relative;z-index:1}
+.clibn{font-family:var(--syne);font-size:1.5rem;font-weight:700;margin-bottom:8px;color:var(--white)}
+.clibd{font-size:1rem;color:var(--mid);line-height:1.7;font-weight:300}
+
+#contact{background:var(--bg2);text-align:center;padding:160px 80px;position:relative;overflow:hidden}
+
+.ct-core{position:absolute;width:800px;height:800px;border-radius:50%;background:radial-gradient(circle,rgba(79,111,255,.1) 0%,rgba(124,92,252,.06) 40%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;animation:coreBreath 9s ease-in-out infinite}
+.ct-rings{position:absolute;inset:0;pointer-events:none}
+.ct-ring{position:absolute;border:1px solid rgba(79,111,255,.08);border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);animation:ringPulse 6s ease-in-out infinite}
+.ct-ring:nth-child(1){width:240px;height:240px;animation-delay:0s}
+.ct-ring:nth-child(2){width:420px;height:420px;animation-delay:1.5s}
+.ct-ring:nth-child(3){width:600px;height:600px;animation-delay:3s}
+.ct-ring:nth-child(4){width:820px;height:820px;animation-delay:4.5s}
+
+.ctlbl{font-family:var(--mono);font-size:.9rem;letter-spacing:.26em;text-transform:uppercase;color:var(--blue);margin-bottom:32px;display:block;position:relative}
+.cth{font-family:var(--syne);font-size:clamp(5rem,11vw,13rem);font-weight:800;line-height:.88;letter-spacing:-.04em;color:var(--white);margin-bottom:20px;position:relative}
+.cth em{font-style:normal;background:linear-gradient(135deg,var(--blue),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.ctsub{font-size:1.15rem;color:var(--mid);font-weight:300;max-width:380px;margin:0 auto 56px;line-height:1.85;position:relative}
+.ctbtns{display:flex;gap:14px;justify-content:center;margin-bottom:48px;flex-wrap:wrap;position:relative}
+
+.cbl{display:inline-flex;align-items:center;gap:12px;background:var(--blue);color:#fff;text-decoration:none;font-size:.95rem;letter-spacing:.12em;text-transform:uppercase;padding:20px 48px;font-family:var(--inter);font-weight:500;position:relative;overflow:hidden;transition:all .4s}
+.cbl::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--blue),var(--violet));opacity:0;transition:opacity .4s}
+.cbl:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(79,111,255,.5)}
+.cbl:hover::before{opacity:1}
+.cbl span{position:relative;z-index:1}
+
+.cbg{display:inline-flex;align-items:center;gap:12px;border:1px solid var(--border-bright);color:var(--white-dim);text-decoration:none;font-size:.95rem;letter-spacing:.12em;text-transform:uppercase;padding:20px 48px;font-family:var(--inter);font-weight:400;transition:all .4s;position:relative;overflow:hidden}
+.cbg::before{content:'';position:absolute;inset:0;background:var(--surface2);transform:scaleX(0);transform-origin:left;transition:transform .4s var(--ease)}
+.cbg:hover{border-color:var(--border-bright);color:var(--white);transform:translateY(-3px);box-shadow:0 0 24px var(--blue-glow)}
+.cbg:hover::before{transform:scaleX(1)}
+.cbg span{position:relative;z-index:1}
+
+.av{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:.88rem;letter-spacing:.14em;text-transform:uppercase;color:var(--mid);position:relative}
+.avd{width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 10px rgba(34,197,94,.6);animation:pulse 2.5s ease-in-out infinite;flex-shrink:0}
+.ctbg{position:absolute;bottom:-100px;left:50%;transform:translateX(-50%);font-family:var(--syne);font-size:clamp(8rem,22vw,22rem);font-weight:800;color:rgba(79,111,255,.025);white-space:nowrap;user-select:none;letter-spacing:-.06em;pointer-events:none}
+
+footer{background:#020306;padding:36px 80px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border)}
+.ftcp{font-family:var(--mono);font-size:.82rem;letter-spacing:.08em;color:var(--mid)}
+.ftbr{font-family:var(--syne);font-size:1.15rem;color:var(--blue);font-weight:700;letter-spacing:-.01em}
+.ftlinks{display:flex;gap:24px;list-style:none}
+.ftlinks a{font-size:.82rem;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;color:var(--mid);transition:color .3s;font-family:var(--mono)}
+.ftlinks a:hover{color:var(--blue)}
+
+@keyframes revUp{from{transform:translateY(110%);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideRight{from{opacity:0;transform:translateX(-24px)}to{opacity:1;transform:translateX(0)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes pulse{0%,100%{box-shadow:0 0 6px rgba(34,197,94,.4)}50%{box-shadow:0 0 14px rgba(34,197,94,.8)}}
+@keyframes mqflow{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes scrollAnim{0%{left:-100%}100%{left:100%}}
+@keyframes dx{from{transform:translateX(-14px)}to{transform:translateX(14px)}}
+@keyframes ringRotate{from{transform:translate(-50%,-50%) rotate(0deg)}to{transform:translate(-50%,-50%) rotate(360deg)}}
+@keyframes ringPulse{0%{opacity:.7;transform:translate(-50%,-50%) scale(.95)}50%{opacity:.3;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.06)}}
+
+.r{opacity:0;transform:translateY(30px);transition:opacity .9s var(--ease-out),transform .9s var(--ease-out)}
+.r.in{opacity:1;transform:none}
+.r.d1{transition-delay:.1s}.r.d2{transition-delay:.2s}.r.d3{transition-delay:.3s}.r.d4{transition-delay:.4s}
+
+@media(max-width:1200px){
+  #hero{grid-template-columns:1fr 1fr}
+  .svgrid{grid-template-columns:repeat(3,1fr)}
+  .proj-row-3{grid-template-columns:1fr 1fr}
+}
+@media(max-width:1024px){
+  nav,nav.sc{padding:18px 32px}
+  section,#cred,#about,#work,#services,#process{padding:80px 32px}
+  #hero{grid-template-columns:1fr;min-height:auto}
+  .hleft{padding:110px 32px 56px}
+  .hright{min-height:440px}
+  #about{grid-template-columns:1fr;gap:52px}
+  .asticky{position:static}
+  .svgrid{grid-template-columns:repeat(2,1fr)}
+  .svtop{grid-template-columns:1fr;gap:28px}
+  .proj-row-2{grid-template-columns:1fr}
+  .proj-row-3{grid-template-columns:1fr 1fr}
+  .proj-row-2 .iframe-wrap{height:260px}
+  .proj-row-2 .iframe-wrap iframe{height:700px;transform:scale(0.37)}
+  .prgrid{grid-template-columns:1fr 1fr}
+  #cred{grid-template-columns:1fr;gap:52px}
+  footer{flex-direction:column;gap:16px;text-align:center}
+  .wkhdr{flex-direction:column;align-items:flex-start;gap:20px}
+  .sec-line{left:32px;right:32px}
+}
+@media(max-width:768px){
+  nav,nav.sc{padding:16px 22px}
+  .nlinks,.ncta{display:none}
+  .hbtn{display:flex;width:44px;height:44px;padding:8px}
+  .hbtn span{width:24px;height:2px}
+  section,#cred,#about,#work,#services,#process{padding:48px 20px}
+  .hleft{padding:80px 20px 42px;font-size:1rem}
+  .hname{font-size:clamp(2.2rem,6vw,3.5rem)}
+  .htrole{font-size:clamp(0.95rem,2vw,1.2rem)}
+  .hstmt{font-size:clamp(0.95rem,1.8vw,1.1rem);line-height:1.7}
+  .hbadge{left:0;top:20px}
+  .svgrid,.prgrid{grid-template-columns:1fr}
+  .proj-row-2,.proj-row-3{grid-template-columns:1fr}
+  .proj-row-2 .iframe-wrap{height:200px}
+  .proj-row-2 .iframe-wrap iframe{height:600px;transform:scale(0.285)}
+  .proj-row-3 .iframe-wrap{height:180px}
+  .proj-row-3 .iframe-wrap iframe{height:550px;transform:scale(0.285)}
+  .ctbtns{flex-direction:column;align-items:center}
+  .cbl,.cbg{padding:16px 32px;font-size:0.9rem;min-width:200px}
+  footer{padding:20px;flex-direction:column;gap:12px}
+  .astats{grid-template-columns:1fr 1fr}
+  #cur,#cur-ring{display:none!important}
+  body{cursor:default}
+  a,button{cursor:pointer}
+  .sec-line{left:20px;right:20px}
+  .svh,.ah,.credh,.wkh,.prh,.cth{font-size:clamp(2rem,5vw,3rem)}
+  .svc{padding:40px 20px}
+  .prs{padding:44px 20px}
+}
+@media(max-width:480px){
+  .hctas{flex-direction:column;align-items:stretch}
+  .svtop{gap:16px}
+  .svintro{max-width:none;font-size:clamp(0.9rem,2vw,1.1rem)}
+  .cligrid{grid-template-columns:1fr}
+  .cbl,.cbg{width:100%;padding:18px 24px;font-size:0.88rem}
+  .ctbtns{gap:12px}
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-ring"></div>
+<canvas id="ambient-canvas"></canvas>
+
+<nav id="nav">
+  <a href="#" class="nlogo">Charles Jr Uzoma<span>Web Developer · Designer · Engineer</span></a>
+  <ul class="nlinks">
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="ncta"><span class="nb">Start a Project →</span></a>
+  <button class="hbtn" id="hbtn" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+
+<section id="hero">
+  <div class="hleft">
+    <div class="heyebrow">Web Developer · UI/UX Designer · Aspiring Software Engineer</div>
+    <h1 class="hname">
+      <span class="hn"><span class="hni">Charles Jr</span></span>
+      <span class="hn"><span class="hni">Uzoma</span></span>
+    </h1>
+    <div class="htwrap">
+      <p class="htrole"><span>I&nbsp;</span><span class="twt" id="twEl"></span><span class="twc"></span></p>
+    </div>
+    <p class="hstmt">I build websites that work, design interfaces that convert, and write code that scales. A developer who thinks about the whole product — not just the next ticket.</p>
+    <div class="hctas">
+      <a href="#work" class="btn-primary"><span>View Work</span></a>
+      <a href="#contact" class="btn-ghost"><span>Start a Project</span></a>
+    </div>
+    <div class="hscroll"><div class="scroll-line"></div><p>Scroll to explore</p></div>
+  </div>
+
+  <div class="hright">
+    <div class="hero-core"></div>
+    <div class="hero-core-ring"></div>
+    <div class="hero-core-ring2"></div>
+    <div class="hbadge"><div class="badge"><span class="dg"></span>Available · 2025</div></div>
+    <div class="picw">
+      <div class="picb"></div>
+      
+      <div class="pici">
+        <div class="picico">
+          <svg width="30" height="30" viewBox="0 0 34 34" fill="none" stroke="rgba(79,111,255,.7)" stroke-width="1"><circle cx="17" cy="12" r="6"/><path d="M3 31C3 21 31 21 31 31"/></svg>
+        </div>
+        <div class="piclbl">Your Photo<br>Goes Here</div>
+        <div class="pichint">Swap div.pici with &lt;img&gt;</div>
+      </div>
+      <div class="pict">Charles Jr Uzoma</div>
+    </div>
+    <div class="hddlbl">charlezjr · 2025</div>
+  </div>
+</section>
+
+<div class="mqs">
+  <div class="mqt">
+    <span class="mqi">UI/UX Design<span class="mqd"></span></span>
+    <span class="mqi">Frontend Engineering<span class="mqd"></span></span>
+    <span class="mqi">Full-Stack Development<span class="mqd"></span></span>
+    <span class="mqi">Startup MVPs<span class="mqd"></span></span>
+    <span class="mqi">React &amp; Next.js<span class="mqd"></span></span>
+    <span class="mqi">Scale &amp; Performance<span class="mqd"></span></span>
+    <span class="mqi">Software Engineering<span class="mqd"></span></span>
+    <span class="mqi">Product Thinking<span class="mqd"></span></span>
+    <span class="mqi">UI/UX Design<span class="mqd"></span></span>
+    <span class="mqi">Frontend Engineering<span class="mqd"></span></span>
+    <span class="mqi">Full-Stack Development<span class="mqd"></span></span>
+    <span class="mqi">Startup MVPs<span class="mqd"></span></span>
+    <span class="mqi">React &amp; Next.js<span class="mqd"></span></span>
+    <span class="mqi">Scale &amp; Performance<span class="mqd"></span></span>
+    <span class="mqi">Software Engineering<span class="mqd"></span></span>
+    <span class="mqi">Product Thinking<span class="mqd"></span></span>
+  </div>
+</div>
+
+<section id="about">
+  <div class="sec-line"></div>
+  <div class="asticky r">
+    <div class="slbl">About me</div>
+    <h2 class="ah">Developer.<br>Designer.<br><em>Engineer.</em></h2>
+    <div class="avis">
+      <div class="avis-grid"></div>
+      <div class="avis-core"></div>
+      <div class="avis-ring"></div>
+      <div class="avis-ring2"></div>
+      <div class="avis-txt">CJU</div>
+    </div>
+  </div>
+  <div class="ac">
+    <p class="r">I'm a web developer and UI/UX designer who writes clean code and designs interfaces that actually make sense to use. I care about the full picture — from how something looks, to how it's built, to whether it solves a real problem.</p>
+    <p class="r d1">I work across the full stack — frontend, backend, and everything in between. I design in Figma, build in React and Next.js, and I'm deepening my engineering foundations every day as I grow toward becoming a well-rounded software engineer.</p>
+    <p class="r d2">What sets me apart: I think like a founder. I don't just execute tasks — I ask <strong>why</strong>, push for better decisions, and care about the outcome as much as the output. That mindset makes my work better, and it makes working with me better too.</p>
+    <div class="aquote r d2"><p>"Design for clarity, then build for scale — everything else is decoration."</p></div>
+    <div class="astats r d3">
+      <div class="sb"><span class="sn" data-target="5" data-suffix="+">0</span><span class="sl">Years of craft</span></div>
+      <div class="sb"><span class="sn" data-target="40" data-suffix="+">0</span><span class="sl">Projects shipped</span></div>
+      <div class="sb"><span class="sn">5</span><span class="sl">Live products</span></div>
+      <div class="sb"><span class="sn">∞</span><span class="sl">Iterations until right</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="services">
+  <div class="sec-line"></div>
+  <div class="svtop">
+    <h2 class="svh r">What I<br><em>build.</em></h2>
+    <p class="svintro r d1">Five capabilities. One standard: everything must serve the business — not just look good on a mockup.</p>
+  </div>
+  <div class="svgrid r">
+    <div class="svc"><span class="svn">01</span><h3 class="svname">UI/UX Design</h3><p class="svdesc">Interfaces that reduce friction and drive action. Every element earns its place on screen.</p><span class="svarr">↗</span></div>
+    <div class="svc"><span class="svn">02</span><h3 class="svname">Frontend Engineering</h3><p class="svdesc">Clean, accessible, performant code. React, Next.js, Tailwind — built to last and hand off.</p><span class="svarr">↗</span></div>
+    <div class="svc"><span class="svn">03</span><h3 class="svname">Full-Stack Development</h3><p class="svdesc">End-to-end product development. APIs, databases, auth — the full picture, not just the surface.</p><span class="svarr">↗</span></div>
+    <div class="svc"><span class="svn">04</span><h3 class="svname">Startup MVPs</h3><p class="svdesc">From zero to product. Fast enough to validate. Solid enough to scale without a full rewrite.</p><span class="svarr">↗</span></div>
+    <div class="svc"><span class="svn">05</span><h3 class="svname">Optimization &amp; Scale</h3><p class="svdesc">Performance audits, architecture improvements, and load times that don't embarrass your brand.</p><span class="svarr">↗</span></div>
+  </div>
+</section>
+
+<section id="work">
+  <div class="sec-line"></div>
+  <div class="wkhdr r">
+    <h2 class="wkh">Real<br><em>Work.</em></h2>
+    <a href="#contact" class="btn-primary"><span>Discuss your project →</span></a>
+  </div>
+
+  <div class="proj-row-2 r">
+    
+    <div class="pcard">
+      <div class="browser-bar">
+        <div class="br-dots"><div class="br-dot"></div><div class="br-dot"></div><div class="br-dot"></div></div>
+        <div class="br-url">lurieme-cosmeticdd.netlify.app</div>
+        <a href="https://lurieme-cosmeticdd.netlify.app" target="_blank" rel="noopener" class="br-open">↗ Open</a>
+      </div>
+      <div class="pcard-preview">
+        <div class="iframe-loading" id="load-lumiere"></div>
+        <div class="iframe-wrap">
+          <iframe src="https://lurieme-cosmeticdd.netlify.app" title="Lumière Cosmetics" loading="lazy" onload="iframeLoaded('load-lumiere')"></iframe>
+        </div>
+        <div class="iframe-overlay"></div>
+        <a href="https://lurieme-cosmeticdd.netlify.app" target="_blank" rel="noopener" class="plive"><span class="plive-dot"></span>Live Site →</a>
+      </div>
+      <div class="pcard-body">
+        <span class="ptag">E-Commerce · Beauty &amp; Luxury</span>
+        <h3 class="ptitle">Lumière — Luxury Cosmetics Platform</h3>
+        <p class="pdesc">Full luxury e-commerce experience for a premium beauty brand. Curated product catalogue, animated collections grid, consultation booking flow, live cart, and editorial brand storytelling. Built to compete with the world's best beauty houses — from first pixel to final checkout.</p>
+        <div class="pstack"><span class="ptch">HTML/CSS</span><span class="ptch">JavaScript</span><span class="ptch">E-Commerce</span><span class="ptch">Booking System</span><span class="ptch">UI/UX</span></div>
+      </div>
+    </div>
+
+    
+    <div class="pcard">
+      <div class="browser-bar">
+        <div class="br-dots"><div class="br-dot"></div><div class="br-dot"></div><div class="br-dot"></div></div>
+        <div class="br-url">aasarifurniture.netlify.app</div>
+        <a href="https://aasarifurniture.netlify.app" target="_blank" rel="noopener" class="br-open">↗ Open</a>
+      </div>
+      <div class="pcard-preview">
+        <div class="iframe-loading" id="load-aasari"></div>
+        <div class="iframe-wrap">
+          <iframe src="https://aasarifurniture.netlify.app" title="Aasari Furniture" loading="lazy" onload="iframeLoaded('load-aasari')"></iframe>
+        </div>
+        <div class="iframe-overlay"></div>
+        <a href="https://aasarifurniture.netlify.app" target="_blank" rel="noopener" class="plive"><span class="plive-dot"></span>Live Site →</a>
+      </div>
+      <div class="pcard-body">
+        <span class="ptag">E-Commerce · Furniture &amp; Craft</span>
+        <h3 class="ptitle">Aasari — Handcrafted Furniture Store</h3>
+        <p class="pdesc">Product-first e-commerce storefront for a handcrafted wooden furniture brand. Category browsing, curated product shop with pricing, promotional offers, and a warm visual language that mirrors the brand's craftsmanship. Built to convert browsers into buyers.</p>
+        <div class="pstack"><span class="ptch">HTML/CSS</span><span class="ptch">JavaScript</span><span class="ptch">E-Commerce</span><span class="ptch">Product Catalogue</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="proj-row-3 r d1">
+    
+    <div class="pcard">
+      <div class="browser-bar">
+        <div class="br-dots"><div class="br-dot"></div><div class="br-dot"></div><div class="br-dot"></div></div>
+        <div class="br-url">bigdream-showcase.netlify.app</div>
+        <a href="https://bigdream-showcase.netlify.app" target="_blank" rel="noopener" class="br-open">↗ Open</a>
+      </div>
+      <div class="pcard-preview">
+        <div class="iframe-loading" id="load-bigdream"></div>
+        <div class="iframe-wrap">
+          <iframe src="https://bigdream-showcase.netlify.app" title="Big Dreams" loading="lazy" onload="iframeLoaded('load-bigdream')"></iframe>
+        </div>
+        <div class="iframe-overlay"></div>
+        <a href="https://bigdream-showcase.netlify.app" target="_blank" rel="noopener" class="plive"><span class="plive-dot"></span>Live →</a>
+      </div>
+      <div class="pcard-body">
+        <span class="ptag">Luxury · Furniture Showcase</span>
+        <h3 class="ptitle">Big Dreams — Luxury Furniture</h3>
+        <p class="pdesc">Premium showcase site for a luxury handcrafted furniture brand. Editorial layout and aspirational positioning built to sell high-ticket pieces online.</p>
+        <div class="pstack"><span class="ptch">HTML/CSS</span><span class="ptch">JavaScript</span><span class="ptch">UI Design</span></div>
+      </div>
+    </div>
+
+    
+    <div class="pcard">
+      <div class="browser-bar">
+        <div class="br-dots"><div class="br-dot"></div><div class="br-dot"></div><div class="br-dot"></div></div>
+        <div class="br-url">fresh-pressdd.netlify.app</div>
+        <a href="https://fresh-pressdd.netlify.app" target="_blank" rel="noopener" class="br-open">↗ Open</a>
+      </div>
+      <div class="pcard-preview">
+        <div class="iframe-loading" id="load-fresh"></div>
+        <div class="iframe-wrap">
+          <iframe src="https://fresh-pressdd.netlify.app" title="Fresh Press" loading="lazy" onload="iframeLoaded('load-fresh')"></iframe>
+        </div>
+        <div class="iframe-overlay"></div>
+        <a href="https://fresh-pressdd.netlify.app" target="_blank" rel="noopener" class="plive"><span class="plive-dot"></span>Live →</a>
+      </div>
+      <div class="pcard-body">
+        <span class="ptag">Food &amp; Beverage · Brand</span>
+        <h3 class="ptitle">Fresh Press — Cold Juice Brand</h3>
+        <p class="pdesc">Vibrant brand website for a fresh-pressed juice company. Bold product hierarchy and a distinct visual identity built to stand out on screen and shelf.</p>
+        <div class="pstack"><span class="ptch">React</span><span class="ptch">UI/UX</span><span class="ptch">Branding</span></div>
+      </div>
+    </div>
+
+    
+    <div class="pcard">
+      <div class="browser-bar">
+        <div class="br-dots"><div class="br-dot"></div><div class="br-dot"></div><div class="br-dot"></div></div>
+        <div class="br-url">dugalevents.netlify.app</div>
+        <a href="https://dugalevents.netlify.app" target="_blank" rel="noopener" class="br-open">↗ Open</a>
+      </div>
+      <div class="pcard-preview">
+        <div class="iframe-loading" id="load-events"></div>
+        <div class="iframe-wrap">
+          <iframe src="https://dugalevents.netlify.app" title="Dugal Events" loading="lazy" onload="iframeLoaded('load-events')"></iframe>
+        </div>
+        <div class="iframe-overlay"></div>
+        <a href="https://dugalevents.netlify.app" target="_blank" rel="noopener" class="plive"><span class="plive-dot"></span>Live →</a>
+      </div>
+      <div class="pcard-body">
+        <span class="ptag">Events · Luxury Planning</span>
+        <h3 class="ptitle">Elegant Events — Luxury Planning</h3>
+        <p class="pdesc">Digital presence for a luxury event planning brand. Service packaging, premium positioning, and a booking experience designed to attract high-value clients.</p>
+        <div class="pstack"><span class="ptch">HTML/CSS</span><span class="ptch">JavaScript</span><span class="ptch">Booking UI</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="proj-footer r d2">
+    <span class="pf-txt">5 live projects — hover any preview to interact</span>
+    <a href="#contact" class="pf-link">Commission a project <span>→</span></a>
+  </div>
+</section>
+
+<section id="process">
+  <div class="sec-line"></div>
+  <div class="slbl r">How I work</div>
+  <h2 class="prh r">A process built<br>for <em>real outcomes.</em></h2>
+  <div class="prgrid">
+    <div class="prs r"><span class="prsn">01</span><h3 class="prst">Understand the Problem</h3><p class="prsd">Before I open Figma or write code, I understand the business. What's the real goal? Who's the user? What does success look like in numbers? This isn't a courtesy. It's the work.</p><div class="prsl"></div></div>
+    <div class="prs r d1"><span class="prsn">02</span><h3 class="prst">Design for Clarity</h3><p class="prsd">Good design removes obstacles. I design interfaces where the right action is the obvious action — no instructions needed, no onboarding video required. Clarity converts.</p><div class="prsl"></div></div>
+    <div class="prs r d2"><span class="prsn">03</span><h3 class="prst">Build for Scale</h3><p class="prsd">I write code that teams can inherit. Clean architecture, documented decisions, and a codebase that doesn't become technical debt the moment you hire your first engineer.</p><div class="prsl"></div></div>
+    <div class="prs r d3"><span class="prsn">04</span><h3 class="prst">Optimize for Growth</h3><p class="prsd">Shipping is day one, not the finish line. Performance, SEO, and analytics that tell you what's actually happening — then we improve from there.</p><div class="prsl"></div></div>
+  </div>
+</section>
+
+<section id="cred">
+  <div class="sec-line"></div>
+  <div class="r">
+    <div class="slbl">Who I work with</div>
+    <h2 class="credh">Built for<br><em>ambitious</em><br>builders.</h2>
+    <p class="credp">I work with people who want a product, not just a deliverable. Founders validating ideas. Agencies needing a technical partner. Enterprises shipping something new.</p>
+    <p class="credp">Lagos, London, or San Francisco — if the problem is interesting and the standards are high, we'll work well together.</p>
+  </div>
+  <div class="cligrid r d2">
+    <div class="clib"><h4 class="clibn">Startups</h4><p class="clibd">From idea to MVP. Fast, focused, and fundable. Built to validate, not just to ship.</p></div>
+    <div class="clib"><h4 class="clibn">Founders</h4><p class="clibd">Someone who speaks your language, challenges your assumptions, and actually delivers.</p></div>
+    <div class="clib"><h4 class="clibn">Agencies</h4><p class="clibd">A white-label technical partner with taste. You bring the client, I bring the craft.</p></div>
+    <div class="clib"><h4 class="clibn">Enterprise</h4><p class="clibd">Complexity handled. Standards met. Delivery guaranteed. No drama.</p></div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="ct-core"></div>
+  <div class="ct-rings">
+    <div class="ct-ring"></div><div class="ct-ring"></div><div class="ct-ring"></div><div class="ct-ring"></div>
+  </div>
+  <span class="ctlbl">Let's build something worth building</span>
+  <h2 class="cth r">Ready to<br><em>start?</em></h2>
+  <p class="ctsub r d1">I take on a limited number of projects each quarter. If you have something worth building, let's talk.</p>
+  <div class="ctbtns r d2">
+    <a href="mailto:uzomacharles75@gmail.com" class="cbl">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="1" y="3" width="14" height="10" rx="1"/><polyline points="1,4 8,9 15,4"/></svg>
+      <span>uzomacharles75@gmail.com</span>
+    </a>
+    <a href="https://wa.me/2348166698713?text=Hi%20Charles%2C%20I%20came%20across%20your%20portfolio%20and%20I%27d%20love%20to%20discuss%20a%20project%20with%20you." class="cbg" target="_blank" rel="noopener">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M8 1.5A6.5 6.5 0 0 1 14.5 8c0 3.59-2.91 6.5-6.5 6.5-1.14 0-2.21-.3-3.13-.81L1.5 14.5l.84-3.74A6.47 6.47 0 0 1 1.5 8 6.5 6.5 0 0 1 8 1.5Z"/></svg>
+      <span>WhatsApp</span>
+    </a>
+  </div>
+  <div class="av r d3"><span class="avd"></span>Currently available for new projects</div>
+  <div class="ctbg">Charles</div>
+</section>
+
+<footer>
+  <p class="ftcp">© 2025 Charles Jr Uzoma. All rights reserved.</p>
+  <span class="ftbr">charlezjr</span>
+  <ul class="ftlinks">
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</footer>
+
+<script>
+
+/* ═══════════════════════════════════════════════════════════════════
+   GARGANTUA BLACK HOLE ENGINE — WebGL / GLSL
+   ───────────────────────────────────────────────────────────────────
+   Architecture:
+     BlackHoleScene      — lifecycle, resize, RAF loop, perf scaling
+     AccretionDiskShader — GLSL fragment shader, physically-based disk
+     GravitationalLens   — raymarched lensing pass (Einstein ring)
+   
+   Physics illusions implemented in GLSL:
+     · Gravitational lensing via ray deflection angle α = 4GM/rc²
+     · Doppler beaming: near-side disk is brighter (relativistic boost)
+     · Gravitational redshift: outer disk cools to red/orange
+     · Photon sphere: light trapped at r = 1.5 Schwarzschild radii
+     · Disk warp: disk curves above/behind event horizon (Gargantua)
+   
+   Performance:
+     · Adaptive pixel ratio (caps at 1.5× on low-end GPUs)
+     · prefers-reduced-motion → static fallback
+     · Throttled mouse input (16ms)
+     · Single fullscreen quad — one draw call per frame
+═══════════════════════════════════════════════════════════════════ */
+
+(function BlackHoleScene() {
+
+  // ── CONFIG ─────────────────────────────────────────────────────
+  const CFG = {
+    // Black hole position (normalized, 0-1)
+    posX: 0.62,   // slightly right of center
+    posY: 0.48,
+
+    // Schwarzschild radius in UV space
+    bhRadius: 0.072,
+
+    // Disk tilt angle (radians) — Gargantua is ~0.17rad from face-on
+    diskTilt: 0.18,
+
+    // Rotation speed (radians/second) — very fast swirl
+    diskSpeed: 0.8,
+
+    // Lensing strength multiplier
+    lensStrength: 1.0,
+
+    // Mouse parallax sensitivity
+    parallaxStrength: 0.018,
+
+    // CTA hover boost
+    hoverLensBoost: 0.0,
+
+    // Performance tier (set dynamically)
+    quality: 1.0,
+  };
+
+  // ── REDUCED MOTION CHECK ────────────────────────────────────────
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ── CANVAS SETUP ───────────────────────────────────────────────
+  const canvas = document.getElementById('ambient-canvas');
+  const gl = canvas.getContext('webgl', {
+    alpha: true,
+    premultipliedAlpha: false,
+    antialias: false,
+    depth: false,
+    stencil: false,
+    powerPreference: 'default',
+  });
+
+  if (!gl) {
+    // Graceful fallback — static gradient
+    canvas.style.background =
+      'radial-gradient(ellipse at 62% 48%, #0a0d2a 0%, #04040a 60%)';
+    return;
+  }
+
+  // ── ADAPTIVE PIXEL RATIO ────────────────────────────────────────
+  function getPixelRatio() {
+    const dpr = window.devicePixelRatio || 1;
+    // Cap at 1.5 for perf; mobile caps at 1.25
+    const isMobile = window.innerWidth < 768;
+    return Math.min(dpr, isMobile ? 1.25 : 1.5);
+  }
+
+  // ── SHADER SOURCE ───────────────────────────────────────────────
+
+  const VERT = `
+    precision mediump float;
+    attribute vec2 a_pos;
+    varying vec2 v_uv;
+    void main() {
+      v_uv = a_pos * 0.5 + 0.5;
+      gl_Position = vec4(a_pos, 0.0, 1.0);
+    }
+  `;
+
+  const FRAG = `
+    precision highp float;
+    varying vec2 v_uv;
+
+    uniform float u_time;
+    uniform vec2  u_resolution;
+    uniform vec2  u_bhPos;       // black hole center (0-1)
+    uniform float u_bhRadius;    // Schwarzschild radius in UV
+    uniform float u_diskTilt;    // disk inclination
+    uniform float u_lensStr;     // lensing strength
+    uniform float u_diskSpeed;   // rotation speed
+    uniform vec2  u_mouse;       // normalized mouse (0-1)
+    uniform float u_quality;     // 0.5–1.0
+
+    // ── CONSTANTS ──────────────────────────────────────────────────
+    #define PI       3.14159265358979
+    #define TAU      6.28318530717959
+    #define RS       u_bhRadius          // Schwarzschild radius
+    #define RS15     (u_bhRadius * 1.5)  // photon sphere radius
+
+    // ── UTILITY ────────────────────────────────────────────────────
+    float sdist(vec2 a, vec2 b) { return length(a - b); }
+
+    // Smooth step with custom knee
+    float ss(float e0, float e1, float x) {
+      float t = clamp((x - e0) / (e1 - e0), 0.0, 1.0);
+      return t * t * (3.0 - 2.0 * t);
+    }
+
+    // ── HASH / NOISE ───────────────────────────────────────────────
+    float hash(vec2 p) {
+      p = fract(p * vec2(127.1, 311.7));
+      p += dot(p, p + 74.19);
+      return fract(p.x * p.y);
+    }
+
+    float noise(vec2 p) {
+      vec2 i = floor(p);
+      vec2 f = fract(p);
+      f = f * f * (3.0 - 2.0 * f);
+      float a = hash(i);
+      float b = hash(i + vec2(1,0));
+      float c = hash(i + vec2(0,1));
+      float d = hash(i + vec2(1,1));
+      return mix(mix(a,b,f.x), mix(c,d,f.x), f.y);
+    }
+
+    // Fractal noise — used for disk turbulence and star field
+    float fbm(vec2 p, int octaves) {
+      float v = 0.0, a = 0.5;
+      for (int i = 0; i < 5; i++) {
+        if (i >= octaves) break;
+        v += a * noise(p);
+        p = p * 2.1 + vec2(1.7, 9.2);
+        a *= 0.5;
+      }
+      return v;
+    }
+
+    // ── GRAVITATIONAL LENSING ──────────────────────────────────────
+    // Deflects a UV ray based on proximity to the black hole.
+    // Physical basis: light deflection angle α ≈ 4GM / (c² b)
+    // where b is the impact parameter (closest approach distance).
+    // We approximate this as a UV-space warp.
+    vec2 gravitationalLens(vec2 uv, vec2 bhUV, float strength) {
+      vec2 delta   = uv - bhUV;
+      float aspect = u_resolution.x / u_resolution.y;
+      delta.x     *= aspect;                       // correct for aspect ratio
+      float dist   = length(delta);
+      float rs     = RS * aspect;
+
+      // No lensing inside event horizon (absorbed)
+      if (dist < rs * 0.98) return uv;
+
+      // Deflection: stronger near photon sphere, falls off as 1/r
+      // Extra term for photon capture ring (Einstein ring at ~1.5 RS)
+      float photonDist = rs * 1.5;
+      float ringBoost  = 1.0 + 1.8 * exp(-pow((dist - photonDist) / (rs * 0.3), 2.0));
+      float alpha      = strength * rs * rs / (dist * dist) * ringBoost;
+      alpha            = min(alpha, 0.85);  // prevent extreme warping
+
+      // Deflect along the radial direction (toward black hole)
+      vec2 deflection = normalize(delta) * (-alpha);
+      deflection.x   /= aspect;
+
+      return uv + deflection;
+    }
+
+    // ── STAR FIELD ─────────────────────────────────────────────────
+    // Subtle, not crowded — portfolio background, not planetarium
+    vec3 starField(vec2 uv) {
+      vec3 col = vec3(0.0);
+      // 3 layers at different scales for depth
+      float s1 = hash(floor(uv * 240.0));
+      float s2 = hash(floor(uv * 96.0 + 7.3));
+      float s3 = hash(floor(uv * 38.0 + 3.1));
+
+      // Sparse — only brightest 1.5% show
+      col += vec3(0.55, 0.6, 0.75)  * step(0.985, s1) * 0.35;
+      col += vec3(0.6,  0.65, 0.8)  * step(0.978, s2) * 0.22;
+      col += vec3(0.7,  0.72, 0.85) * step(0.972, s3) * 0.15;
+
+      return col;
+    }
+
+    // ── NEBULA WISPS ───────────────────────────────────────────────
+    // Very faint colour gradients — deep indigo/violet atmosphere
+    vec3 nebula(vec2 uv) {
+      float n1 = fbm(uv * 2.8 + vec2(0.3, 0.7), 3);
+      float n2 = fbm(uv * 1.9 + vec2(4.1, 2.3), 3);
+
+      vec3 c1 = vec3(0.04, 0.05, 0.14) * n1 * 0.6;  // deep indigo
+      vec3 c2 = vec3(0.06, 0.04, 0.12) * n2 * 0.4;  // dark violet
+      return c1 + c2;
+    }
+
+    // ── ACCRETION DISK ─────────────────────────────────────────────
+    // The disk is a tilted ellipse in UV space.
+    // Physically:
+    //   · Inner edge ≈ 3× Schwarzschild radius (ISCO)
+    //   · Outer edge ≈ 12–18× RS
+    //   · Near-side (approaching) is Doppler-boosted (brighter, bluer)
+    //   · Far-side (receding) is dimmer, redder
+    //   · Gravitational redshift dims and reddens the inner rim
+    vec3 accretionDisk(vec2 uv, vec2 bhUV, float time) {
+      vec2 delta  = uv - bhUV;
+      float aspect = u_resolution.x / u_resolution.y;
+      delta.x    *= aspect;
+
+      // Project onto tilted disk plane
+      // tilt rotates the y-axis — simulates Gargantua's inclination
+      float cosT = cos(u_diskTilt);
+      float sinT = sin(u_diskTilt);
+      vec2 diskUV = vec2(delta.x, delta.y / max(cosT, 0.12));
+
+      float r    = length(diskUV);  // radial distance in disk plane
+      float rs   = RS * aspect;
+
+      // ISCO: innermost stable circular orbit ≈ 3RS
+      float rISCO = rs * 3.0;
+      // Outer edge of visible disk
+      float rOuter = rs * 16.0;
+
+      // Outside disk bounds — no contribution
+      if (r < rISCO || r > rOuter) return vec3(0.0);
+
+      // Angular position on disk (for rotation & Doppler)
+      float angle = atan(diskUV.y, diskUV.x);
+      float rotAngle = angle - time * u_diskSpeed;
+
+      // ── Doppler Beaming ───────────────────────────────────────
+      // Near side (approaching, positive x) is boosted
+      // Factor: I_obs = I_emit * δ^4, δ = 1/(γ(1-β·cosθ))
+      // Approximated as a sinusoidal brightness modulation
+      float beta        = 0.3;  // orbital velocity / c (inner disk)
+      float cosAngle    = cos(angle);
+      float doppler     = 1.0 + beta * cosAngle * (1.0 - smoothstep(rISCO, rOuter, r));
+      doppler           = pow(doppler, 3.0);  // δ^3 approximation
+
+      // ── Radial temperature profile ────────────────────────────
+      // T ∝ r^(-3/4) for Shakura-Sunyaev disk
+      // We map this to a colour gradient: inner=hot white-blue, outer=cool red
+      float radialT = 1.0 - smoothstep(rISCO, rISCO * 4.0, r);  // 0 outer, 1 inner
+      float outerT  = smoothstep(rISCO, rOuter * 0.4, r) * (1.0 - smoothstep(rISCO * 4.0, rOuter, r));
+
+      // Hot inner region: white → electric blue → indigo
+      vec3 hotCol = mix(
+        vec3(0.55, 0.62, 1.00),  // electric blue
+        vec3(0.85, 0.90, 1.00),  // near-white (inner ISCO rim)
+        radialT * radialT
+      );
+
+      // Mid-disk: deep indigo → muted violet
+      vec3 midCol = vec3(0.22, 0.18, 0.55);
+
+      // Outer cool region: violet → deep red-orange (gravitational redshift)
+      vec3 coolCol = vec3(0.35, 0.12, 0.08);
+
+      vec3 diskCol = mix(mix(coolCol, midCol, outerT), hotCol, radialT);
+
+      // ── Disk Turbulence ───────────────────────────────────────
+      // fbm-based density variation — knots and lanes in the disk
+      float turb = fbm(diskUV * 8.0 + vec2(rotAngle * 0.5, 0.0), 3);
+      turb = 0.55 + 0.45 * turb;
+
+      // ── Disk thickness mask ───────────────────────────────────
+      // The disk has finite height. Above/below: fade out.
+      // Gargantua: disk is extremely thin but curves near horizon
+      float diskY   = delta.y - delta.x * tan(u_diskTilt) * 0.25;
+      float diskH   = rs * 1.2 * (1.0 + 0.6 * smoothstep(rOuter, rISCO, r));
+      float thickMask = exp(-pow(diskY / diskH, 2.0) * 2.8);
+
+      // ── Radial fade ───────────────────────────────────────────
+      float radFade = smoothstep(rISCO, rISCO * 1.3, r) *
+                      (1.0 - smoothstep(rOuter * 0.7, rOuter, r));
+
+      // ── Gravitational redshift at inner rim ───────────────────
+      // Dims and reddens light close to the photon sphere
+      float gRedshift = 1.0 - 0.7 * smoothstep(rISCO * 1.5, rISCO, r);
+
+      // ── Combine ───────────────────────────────────────────────
+      float intensity = doppler * turb * thickMask * radFade * gRedshift;
+
+      // Disk is dim — this is a background, not a hero
+      return diskCol * intensity * 0.42;
+    }
+
+    // ── DISK GHOSTING (far-side warp above horizon) ────────────────
+    // In Gargantua, the far side of the disk appears warped above
+    // the black hole due to gravitational lensing.
+    // We render a second, fainter, vertically-flipped disk pass.
+    vec3 ghostDisk(vec2 uv, vec2 bhUV, float time) {
+      // Flip y relative to black hole, then sample disk
+      vec2 ghostUV = vec2(uv.x, bhUV.y * 2.0 - uv.y);
+      return accretionDisk(ghostUV, bhUV, time) * 0.28;
+    }
+
+    // ── PHOTON RING ────────────────────────────────────────────────
+    // Thin bright annulus at ~1.5 Schwarzschild radii
+    // Represents photons orbiting the black hole before escaping
+    vec3 photonRing(vec2 uv, vec2 bhUV) {
+      float aspect = u_resolution.x / u_resolution.y;
+      vec2 delta   = uv - bhUV;
+      delta.x     *= aspect;
+      float dist   = length(delta);
+      float rs     = RS * aspect;
+
+      float ringR  = rs * 1.5;          // photon sphere radius
+      float ringW  = rs * 0.08;         // ring half-width
+      float ring   = exp(-pow((dist - ringR) / ringW, 2.0) * 6.0);
+
+      // Ring brightness modulated by disk plane intersection
+      float cosA   = cos(atan(delta.y, delta.x) - u_time * u_diskSpeed * 0.5);
+      float boost  = 0.7 + 0.3 * cosA;  // slight brightness asymmetry
+
+      vec3 ringCol = vec3(0.55, 0.65, 0.95);  // cool blue-white
+      return ringCol * ring * boost * 0.5;
+    }
+
+    // ── EVENT HORIZON ──────────────────────────────────────────────
+    float eventHorizon(vec2 uv, vec2 bhUV) {
+      float aspect = u_resolution.x / u_resolution.y;
+      vec2 delta   = uv - bhUV;
+      delta.x     *= aspect;
+      float dist   = length(delta);
+      return 1.0 - smoothstep(RS * aspect * 0.88, RS * aspect, dist);
+    }
+
+    // ── SHADOW GRADIENT ────────────────────────────────────────────
+    // Deep shadow around the horizon — absorbs background light
+    float shadowZone(vec2 uv, vec2 bhUV) {
+      float aspect = u_resolution.x / u_resolution.y;
+      vec2 delta   = uv - bhUV;
+      delta.x     *= aspect;
+      float dist   = length(delta);
+      float rs     = RS * aspect;
+      return ss(rs * 6.0, rs * 1.2, dist);
+    }
+
+    // ── MAIN ───────────────────────────────────────────────────────
+    void main() {
+      vec2 uv = v_uv;
+
+      // Subtle mouse parallax — only the background shifts
+      vec2 mouseShift = (u_mouse - 0.5) * 0.012;
+
+      // Black hole position
+      vec2 bhUV = vec2(u_bhPos.x, u_bhPos.y);
+
+      // ── Gravitational lensing pass ──────────────────────────────
+      // Rays are deflected in UV space before sampling background
+      vec2 lensedUV = gravitationalLens(uv + mouseShift * 0.4, bhUV, u_lensStr);
+
+      // ── Base background ─────────────────────────────────────────
+      vec3 col = vec3(0.012, 0.010, 0.028);  // near-black deep indigo
+
+      // Nebula atmosphere (lensed — warps with the field)
+      col += nebula(lensedUV * 0.9 + mouseShift * 0.2);
+
+      // Star field (lensed)
+      col += starField(lensedUV);
+
+      // ── Disk layers ─────────────────────────────────────────────
+      // Main disk
+      col += accretionDisk(uv, bhUV, u_time);
+
+      // Ghost disk (far-side warp above horizon — Gargantua effect)
+      col += ghostDisk(uv, bhUV, u_time) * 0.6;
+
+      // ── Photon ring ─────────────────────────────────────────────
+      col += photonRing(uv, bhUV);
+
+      // ── Shadow zone — dims background near horizon ───────────────
+      float shadow = shadowZone(uv, bhUV);
+      col *= (1.0 - shadow * 0.82);
+
+      // ── Outer ambient glow (very subtle halo) ───────────────────
+      float aspect = u_resolution.x / u_resolution.y;
+      vec2 d = uv - bhUV; d.x *= aspect;
+      float halo = exp(-length(d) / (RS * aspect * 7.0)) * 0.06;
+      col += vec3(0.12, 0.15, 0.35) * halo;
+
+      // ── Event horizon — pure absorber ───────────────────────────
+      float horizon = eventHorizon(uv, bhUV);
+      col = mix(col, vec3(0.0), horizon);
+
+      // ── Vignette ────────────────────────────────────────────────
+      vec2 vUV = uv - 0.5;
+      float vig = 1.0 - dot(vUV * vec2(1.0, 1.6), vUV * vec2(1.0, 1.6)) * 1.3;
+      col *= clamp(vig, 0.0, 1.0);
+
+      // Tone map: slight S-curve to avoid blown highlights
+      col = col / (col + 0.18) * 1.18;
+
+      gl_FragColor = vec4(col, 1.0);
+    }
+  `;
+
+  // ── COMPILE SHADER ──────────────────────────────────────────────
+  function compileShader(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+      console.warn('Shader compile error:', gl.getShaderInfoLog(s));
+      return null;
+    }
+    return s;
+  }
+
+  const vert = compileShader(gl.VERTEX_SHADER, VERT);
+  const frag = compileShader(gl.FRAGMENT_SHADER, FRAG);
+  if (!vert || !frag) return;
+
+  const prog = gl.createProgram();
+  gl.attachShader(prog, vert);
+  gl.attachShader(prog, frag);
+  gl.linkProgram(prog);
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+    console.warn('Program link error:', gl.getProgramInfoLog(prog));
+    return;
+  }
+  gl.useProgram(prog);
+
+  // ── FULLSCREEN QUAD ─────────────────────────────────────────────
+  const quadBuf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, quadBuf);
+  gl.bufferData(gl.ARRAY_BUFFER,
+    new Float32Array([-1,-1, 1,-1, -1,1, 1,1]),
+    gl.STATIC_DRAW);
+
+  const aPos = gl.getAttribLocation(prog, 'a_pos');
+  gl.enableVertexAttribArray(aPos);
+  gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+
+  // ── UNIFORMS ────────────────────────────────────────────────────
+  const U = {
+    time:      gl.getUniformLocation(prog, 'u_time'),
+    res:       gl.getUniformLocation(prog, 'u_resolution'),
+    bhPos:     gl.getUniformLocation(prog, 'u_bhPos'),
+    bhRadius:  gl.getUniformLocation(prog, 'u_bhRadius'),
+    diskTilt:  gl.getUniformLocation(prog, 'u_diskTilt'),
+    lensStr:   gl.getUniformLocation(prog, 'u_lensStr'),
+    diskSpeed: gl.getUniformLocation(prog, 'u_diskSpeed'),
+    mouse:     gl.getUniformLocation(prog, 'u_mouse'),
+    quality:   gl.getUniformLocation(prog, 'u_quality'),
+  };
+
+  // ── RESIZE ──────────────────────────────────────────────────────
+  let W, H, PR;
+  function resize() {
+    PR = getPixelRatio();
+    W  = Math.floor(window.innerWidth  * PR);
+    H  = Math.floor(window.innerHeight * PR);
+    canvas.width  = W;
+    canvas.height = H;
+    canvas.style.width  = window.innerWidth  + 'px';
+    canvas.style.height = window.innerHeight + 'px';
+    gl.viewport(0, 0, W, H);
+  }
+  resize();
+  window.addEventListener('resize', resize, { passive: true });
+
+  // ── MOUSE ───────────────────────────────────────────────────────
+  let mouseX = CFG.posX, mouseY = CFG.posY;
+  let targetMX = CFG.posX, targetMY = CFG.posY;
+  let lastMouse = 0;
+
+  document.addEventListener('mousemove', e => {
+    const now = performance.now();
+    if (now - lastMouse < 16) return;  // throttle to 60fps
+    lastMouse = now;
+    targetMX = e.clientX / window.innerWidth;
+    targetMY = 1.0 - e.clientY / window.innerHeight;
+  }, { passive: true });
+
+  // ── CTA HOVER BOOST ─────────────────────────────────────────────
+  let lensBoost = 0.0, targetLensBoost = 0.0;
+
+  document.querySelectorAll('.btn-primary, .btn-ghost, .ncta, .cbl, .cbg').forEach(el => {
+    el.addEventListener('mouseenter', () => { targetLensBoost = 0.35; });
+    el.addEventListener('mouseleave', () => { targetLensBoost = 0.0; });
+  });
+
+  // ── PERFORMANCE DETECTION ───────────────────────────────────────
+  // Run a quick benchmark frame — if slow, drop quality
+  let quality = 1.0;
+  let t0 = performance.now();
+  let frameTimes = [];
+
+  function checkPerf(dt) {
+    if (frameTimes.length < 60) {
+      frameTimes.push(dt);
+    } else if (frameTimes.length === 60) {
+      const avg = frameTimes.reduce((a, b) => a + b, 0) / 60;
+      if (avg > 22) quality = 0.7;       // struggling — drop quality
+      if (avg > 35) quality = 0.5;       // very slow
+      frameTimes.push(null);             // stop measuring
+    }
+  }
+
+  // ── RENDER LOOP ──────────────────────────────────────────────────
+  let lastTime = 0;
+  let rafId = null;
+  let isVisible = true;
+  let time = 0;
+  let frameCount = 0;
+
+  // Pause when tab hidden (CPU saver)
+  document.addEventListener('visibilitychange', () => {
+    isVisible = !document.hidden;
+    if (isVisible && !rafId) rafId = requestAnimationFrame(loop);
+  });
+
+  // Keep animation running at full speed (no scroll slowdown)
+  let scrollSlowdown = 1.0, targetSlowdown = 1.0;
+
+  function loop(ts) {
+    if (!isVisible) { rafId = null; return; }
+    rafId = requestAnimationFrame(loop);
+
+    const dt = Math.min(ts - lastTime, 50);  // cap dt at 50ms
+    lastTime = ts;
+
+    checkPerf(dt);
+
+    // Ease values
+    mouseX += (targetMX - mouseX) * 0.04;
+    mouseY += (targetMY - mouseY) * 0.04;
+    lensBoost    += (targetLensBoost - lensBoost) * 0.06;
+    scrollSlowdown += (targetSlowdown - scrollSlowdown) * 0.08;
+
+    // Always advance time by fixed amount per frame (~60fps)
+    // This ensures constant swirling even without relying on RAF timestamps
+    time += 0.0167 * scrollSlowdown;
+    frameCount++;
+
+    // Compute mouse-driven BH position shift (parallax)
+    const dMX = (mouseX - 0.5) * CFG.parallaxStrength;
+    const dMY = (mouseY - 0.5) * CFG.parallaxStrength;
+    const bhX = CFG.posX + dMX;
+    const bhY = CFG.posY + dMY;
+
+    // Set uniforms
+    gl.uniform1f(U.time,      time);
+    gl.uniform2f(U.res,       W, H);
+    gl.uniform2f(U.bhPos,     bhX, bhY);
+    gl.uniform1f(U.bhRadius,  CFG.bhRadius);
+    gl.uniform1f(U.diskTilt,  CFG.diskTilt);
+    gl.uniform1f(U.lensStr,   CFG.lensStrength + lensBoost);
+    gl.uniform1f(U.diskSpeed, CFG.diskSpeed * scrollSlowdown);
+    gl.uniform2f(U.mouse,     mouseX, mouseY);
+    gl.uniform1f(U.quality,   quality);
+
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+  }
+
+  rafId = requestAnimationFrame(loop);
+
+  // ── PUBLIC API (for page transitions) ───────────────────────────
+  window.BlackHole = {
+    intensify: () => { targetLensBoost = 0.8; setTimeout(() => { targetLensBoost = 0.0; }, 1200); },
+    pause:  () => { isVisible = false; },
+    resume: () => { isVisible = true; rafId = rafId || requestAnimationFrame(loop); },
+  };
+
+})();
+
+const cur = document.getElementById('cur');
+const ring = document.getElementById('cur-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cur.style.left = mx + 'px'; cur.style.top = my + 'px';
+});
+(function loop() {
+  rx += (mx - rx) * 0.2; ry += (my - ry) * 0.2;
+  ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+  requestAnimationFrame(loop);
+})();
+document.querySelectorAll('a,button,.svc,.clib,.prs,.pcard,.sb').forEach(el => {
+  el.addEventListener('mouseenter', () => document.body.classList.add('ch'));
+  el.addEventListener('mouseleave', () => document.body.classList.remove('ch'));
+});
+
+const phrases = [
+  'design interfaces that convert.',
+  'build for the web.',
+  'write code that scales.',
+  'think like a founder.',
+  'create without compromise.',
+  'ship products that work.',
+  'grow as a software engineer.',
+];
+let pi = 0, ci = 0, del = false;
+const tw = document.getElementById('twEl');
+function type() {
+  const p = phrases[pi];
+  if (!del) {
+    tw.textContent = p.slice(0, ++ci);
+    if (ci === p.length) { del = true; setTimeout(type, 2600); return; }
+    setTimeout(type, 65 + Math.random() * 30);
+  } else {
+    tw.textContent = p.slice(0, --ci);
+    if (ci === 0) { del = false; pi = (pi + 1) % phrases.length; setTimeout(type, 400); return; }
+    setTimeout(type, 28);
+  }
+}
+setTimeout(type, 2200);
+
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => nav.classList.toggle('sc', scrollY > 60));
+
+window.addEventListener('scroll', () => {
+  const s = scrollY;
+  if (s < innerHeight) {
+    document.querySelector('.hname').style.transform = `translateY(${s * 0.08}px)`;
+    document.querySelector('.htwrap').style.transform = `translateY(${s * 0.05}px)`;
+    document.querySelector('.hright').style.transform = `translateY(${s * 0.06}px)`;
+  }
+  // Enhanced scroll parallax for sections
+  document.querySelectorAll('[data-scroll-speed]').forEach(el => {
+    const speed = parseFloat(el.getAttribute('data-scroll-speed')) || 0.5;
+    el.style.transform = `translateY(${s * speed * -0.1}px)`;
+  });
+});
+
+const io = new IntersectionObserver(es => {
+  es.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.r').forEach(el => io.observe(el));
+
+document.querySelectorAll('.sn[data-target]').forEach(el => {
+  const target = parseInt(el.dataset.target), suf = el.dataset.suffix || '';
+  el.textContent = '0';
+  new IntersectionObserver(es => {
+    if (es[0].isIntersecting) {
+      let n = 0; const step = Math.ceil(target / 40);
+      const t = setInterval(() => { n = Math.min(n + step, target); el.textContent = n + suf; if (n >= target) clearInterval(t); }, 36);
+    }
+  }, { threshold: 0.7 }).observe(el);
+});
+
+const svcs = document.querySelectorAll('.svc');
+svcs.forEach((c, i) => { c.style.cssText = `opacity:0;transform:translateY(20px);transition:opacity .6s ease ${i * .07}s,transform .6s ease ${i * .07}s`; });
+new IntersectionObserver(es => {
+  if (es[0].isIntersecting) svcs.forEach(c => { c.style.opacity = '1'; c.style.transform = 'none'; });
+}, { threshold: 0.15 }).observe(document.querySelector('.svgrid'));
+
+function iframeLoaded(id) {
+  const el = document.getElementById(id);
+  if (el) { el.classList.add('hidden'); setTimeout(() => el.remove(), 600); }
+}
+document.querySelectorAll('.iframe-loading').forEach(el => {
+  setTimeout(() => { el.classList.add('hidden'); setTimeout(() => el.remove && el.remove(), 600); }, 9000);
+});
+
+function scaleIframes() {
+  document.querySelectorAll('.iframe-wrap').forEach(wrap => {
+    const w = wrap.offsetWidth;
+    const iframe = wrap.querySelector('iframe');
+    if (!iframe) return;
+    const scale = w / 1400;
+    iframe.style.transform = `scale(${scale})`;
+    iframe.style.height = (wrap.offsetHeight / scale) + 'px';
+  });
+}
+window.addEventListener('resize', scaleIframes);
+setTimeout(scaleIframes, 150);
+
+document.querySelectorAll('.pcard').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const rect = card.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    card.style.background = `radial-gradient(circle at ${x}% ${y}%, #111420 0%, #0c0e1a 60%)`;
+  });
+  card.addEventListener('mouseleave', () => { card.style.background = ''; });
+});
+
+function smoothTo(href) {
+  const target = document.querySelector(href);
+  if (target) {
+    const top = target.getBoundingClientRect().top + window.scrollY - 80;
+    window.scrollTo({ top, behavior: 'smooth' });
+  }
+}
+
+const hbtn = document.getElementById('hbtn');
+const nlinks = document.querySelector('.nlinks');
+let mOpen = false;
+
+function closeMenu() {
+  mOpen = false; hbtn.classList.remove('op');
+  nlinks.removeAttribute('style');
+  const closeBtn = document.getElementById('mobile-close-btn');
+  if (closeBtn) closeBtn.remove();
+  document.body.style.overflow = '';
+  document.documentElement.style.overflow = '';
+}
+function openMenu() {
+  mOpen = true; hbtn.classList.add('op');
+  document.body.style.overflow = 'hidden';
+  document.documentElement.style.overflow = 'hidden';
+  nlinks.style.cssText = 'display:flex;flex-direction:column;position:fixed;inset:0;background:rgba(4,4,8,.97);backdrop-filter:blur(28px);justify-content:center;align-items:center;z-index:499;gap:44px;overflow:hidden';
+  nlinks.querySelectorAll('a').forEach(a => Object.assign(a.style, {
+    fontFamily: 'var(--syne)', fontSize: '2.6rem', fontWeight: '800',
+    letterSpacing: '-.02em', color: 'var(--white)', textTransform: 'none'
+  }));
+  // Add close button to menu
+  if (!document.getElementById('mobile-close-btn')) {
+    const closeBtn = document.createElement('button');
+    closeBtn.id = 'mobile-close-btn';
+    closeBtn.innerHTML = '✕';
+    closeBtn.style.cssText = 'position:fixed;top:28px;right:24px;z-index:501;background:none;border:none;font-size:2.2rem;color:var(--white);cursor:pointer;padding:8px;transition:all .3s;font-weight:300;line-height:1';
+    closeBtn.addEventListener('mouseenter', () => closeBtn.style.color = 'var(--blue)');
+    closeBtn.addEventListener('mouseleave', () => closeBtn.style.color = 'var(--white)');
+    closeBtn.addEventListener('click', closeMenu);
+    document.body.appendChild(closeBtn);
+  }
+}
+hbtn.addEventListener('click', () => mOpen ? closeMenu() : openMenu());
+
+// Close menu when clicking on menu background (outside content)
+nlinks.addEventListener('click', (e) => {
+  if (e.target === nlinks) closeMenu();
+});
+
+// Nav links smooth scroll + close menu
+document.querySelectorAll('.nlinks a, .ncta').forEach(link => {
+  link.addEventListener('click', e => {
+    const href = link.getAttribute('href');
+    if (href && href.startsWith('#')) {
+      e.preventDefault();
+      closeMenu();
+      smoothTo(href);
+    }
+  });
+});
+
+// All other anchor links
+document.querySelectorAll('a[href^="#"]').forEach(link => {
+  if (!link.closest('.nlinks') && !link.classList.contains('ncta')) {
+    link.addEventListener('click', e => {
+      const href = link.getAttribute('href');
+      if (document.querySelector(href)) { e.preventDefault(); smoothTo(href); }
+    });
+  }
+});
+
+document.querySelectorAll('.svc,.clib,.prs').forEach(el => {
+  el.addEventListener('mousemove', e => {
+    const rect = el.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    el.style.setProperty('--mx', x + '%');
+    el.style.setProperty('--my', y + '%');
+  });
+});
+</script>
+</body>
+</html>
